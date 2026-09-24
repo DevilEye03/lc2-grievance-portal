@@ -71,8 +71,8 @@ export function AdminSidebar({ userRole, userName }: AdminSidebarProps) {
       {/* Nav */}
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
-          // Hide user management for non-super-admins
-          if (item.href === "/admin/users" && userRole !== "SUPER_ADMIN") return null;
+          // Hide user management for roles other than super admin & president
+          if (item.href === "/admin/users" && userRole !== "SUPER_ADMIN" && userRole !== "PRESIDENT") return null;
 
           const active = pathname.startsWith(item.href);
           return (

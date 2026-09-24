@@ -13,8 +13,8 @@ export default async function UsersPage() {
   const userRole = headersList.get("x-user-role") || "";
   const userId = headersList.get("x-user-id") || "";
 
-  // Only SUPER_ADMIN can access this page
-  if (userRole !== "SUPER_ADMIN") {
+  // Only SUPER_ADMIN and PRESIDENT can access this page
+  if (userRole !== "SUPER_ADMIN" && userRole !== "PRESIDENT") {
     redirect("/admin/dashboard");
   }
 

@@ -4,14 +4,14 @@ import { getSession } from "@/lib/auth";
 import { updateUserSchema } from "@/lib/validations";
 import bcrypt from "bcryptjs";
 
-// PATCH /api/users/[id] — SUPER_ADMIN only
+// PATCH /api/users/[id] — SUPER_ADMIN and PRESIDENT
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getSession();
-    if (!session || session.role !== "SUPER_ADMIN") {
+    if (!session || (session.role !== "SUPER_ADMIN" && session.role !== "PRESIDENT")) {
       return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
     }
 
@@ -47,14 +47,14 @@ export async function PATCH(
   }
 }
 
-// DELETE /api/users/[id] — SUPER_ADMIN only
+// DELETE /api/users/[id] — SUPER_ADMIN and PRESIDENT
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getSession();
-    if (!session || session.role !== "SUPER_ADMIN") {
+    if (!session || (session.role !== "SUPER_ADMIN" && session.role !== "PRESIDENT")) {
       return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
     }
 

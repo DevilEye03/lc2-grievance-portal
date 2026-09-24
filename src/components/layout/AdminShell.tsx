@@ -111,7 +111,7 @@ export function AdminShell({ userName, userRole, children }: AdminShellProps) {
             {/* Nav list */}
             <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
               {navItems.map((item) => {
-                if (item.href === "/admin/users" && userRole !== "SUPER_ADMIN") return null;
+                if (item.href === "/admin/users" && userRole !== "SUPER_ADMIN" && userRole !== "PRESIDENT") return null;
                 const active = pathname.startsWith(item.href);
                 return (
                   <Link
@@ -193,7 +193,7 @@ export function AdminShell({ userName, userRole, children }: AdminShellProps) {
         {/* Nav */}
         <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
-            if (item.href === "/admin/users" && userRole !== "SUPER_ADMIN") return null;
+            if (item.href === "/admin/users" && userRole !== "SUPER_ADMIN" && userRole !== "PRESIDENT") return null;
             const active = pathname.startsWith(item.href);
             return (
               <Link

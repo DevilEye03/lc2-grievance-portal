@@ -9,7 +9,7 @@ import { toast } from "@/components/ui/Toast";
 import { ROLES } from "@/lib/validations";
 import { formatDate } from "@/lib/sla";
 import type { AdminUser } from "@/types";
-import { Plus, Edit2, Trash2, ShieldCheck, Mail, Calendar } from "lucide-react";
+import { Plus, Edit2, Trash2, ShieldCheck, Crown, Mail, Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface UserTableProps {
@@ -19,6 +19,7 @@ interface UserTableProps {
 
 const roleColors: Record<string, string> = {
   SUPER_ADMIN: "bg-brand-100 text-brand-800 border-brand-300",
+  PRESIDENT: "bg-amber-100 text-amber-800 border-amber-300",
   DEPARTMENT_HEAD: "bg-purple-100 text-purple-800 border-purple-300",
   OFFICER: "bg-gray-100 text-gray-700 border-gray-300",
 };
@@ -145,6 +146,7 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
                     }`}
                   >
                     {user.role === "SUPER_ADMIN" && <ShieldCheck className="h-3 w-3" />}
+                    {user.role === "PRESIDENT" && <Crown className="h-3 w-3 text-amber-600" />}
                     {user.role.replace("_", " ")}
                   </span>
                 </div>
@@ -221,6 +223,7 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
                     }`}
                   >
                     {user.role === "SUPER_ADMIN" && <ShieldCheck className="h-3 w-3" />}
+                    {user.role === "PRESIDENT" && <Crown className="h-3 w-3 text-amber-600" />}
                     {user.role.replace("_", " ")}
                   </span>
                 </td>

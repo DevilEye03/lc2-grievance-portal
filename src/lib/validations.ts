@@ -21,6 +21,7 @@ export const STATUSES = [
 
 export const ROLES = [
   { value: "SUPER_ADMIN", label: "Super Admin" },
+  { value: "PRESIDENT", label: "President" },
   { value: "DEPARTMENT_HEAD", label: "Department Head" },
   { value: "OFFICER", label: "Officer" },
 ] as const;
@@ -97,14 +98,14 @@ export const createUserSchema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email(),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  role: z.enum(["SUPER_ADMIN", "DEPARTMENT_HEAD", "OFFICER"]),
+  role: z.enum(["SUPER_ADMIN", "PRESIDENT", "DEPARTMENT_HEAD", "OFFICER"]),
 });
 
 export const updateUserSchema = z.object({
   name: z.string().min(2).max(100).optional(),
   email: z.string().email().optional(),
   password: z.string().min(8).optional().or(z.literal("")),
-  role: z.enum(["SUPER_ADMIN", "DEPARTMENT_HEAD", "OFFICER"]).optional(),
+  role: z.enum(["SUPER_ADMIN", "PRESIDENT", "DEPARTMENT_HEAD", "OFFICER"]).optional(),
 });
 
 // ─── Track Form ────────────────────────────────────────────────────────────────

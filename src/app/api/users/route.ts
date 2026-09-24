@@ -4,11 +4,11 @@ import { getSession } from "@/lib/auth";
 import { createUserSchema } from "@/lib/validations";
 import bcrypt from "bcryptjs";
 
-// GET /api/users — SUPER_ADMIN only
+// GET /api/users — SUPER_ADMIN and PRESIDENT
 export async function GET() {
   try {
     const session = await getSession();
-    if (!session || session.role !== "SUPER_ADMIN") {
+    if (!session || (session.role !== "SUPER_ADMIN" && session.role !== "PRESIDENT")) {
       return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
     }
 
@@ -31,11 +31,11 @@ export async function GET() {
   }
 }
 
-// POST /api/users — SUPER_ADMIN only
+// POST /api/users — SUPER_ADMIN and PRESIDENT
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
-    if (!session || session.role !== "SUPER_ADMIN") {
+    if (!session || (session.role !== "SUPER_ADMIN" && session.role !== "PRESIDENT")) {
       return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
     }
 
