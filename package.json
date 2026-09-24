@@ -10,7 +10,7 @@
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
-    "prisma:seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts",
+    "prisma:seed": "ts-node --transpile-only prisma/seed.ts",
     "prisma:studio": "prisma studio",
     "setup": "npm install && npx prisma generate && npx prisma db push && npm run prisma:seed"
   },
@@ -21,6 +21,7 @@
     "cookie": "^0.7.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.462.0",
+    "mysql2": "^3.24.4",
     "next": "14.2.18",
     "nodemailer": "^6.9.16",
     "react": "^18.3.1",
@@ -46,6 +47,6 @@
     "typescript": "^5.6.3"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   }
 }
