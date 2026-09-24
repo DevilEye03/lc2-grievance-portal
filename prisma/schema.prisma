@@ -50,6 +50,8 @@ model Complaint {
   @@index([ticketId])
   @@index([studentEmail])
   @@index([status])
+  @@index([category])
+  @@index([createdAt])
 }
 
 model StatusLog {

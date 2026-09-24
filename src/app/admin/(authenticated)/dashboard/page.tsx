@@ -10,7 +10,15 @@ import Link from "next/link";
 import { Eye, ChevronRight } from "lucide-react";
 import type { DashboardStats as Stats } from "@/types";
 
+import { unstable_cache } from "next/cache";
+
 export const metadata: Metadata = { title: "Dashboard" };
+
+const getCachedDashboardData = unstable_cache(
+  async (): Promise<Stats> => getDashboardData(),
+  ["admin-dashboard-stats-v1"],
+  { revalidate: 30, tags: ["dashboard-stats"] }
+);
 
 async function getDashboardData(): Promise<Stats> {
   const now = new Date();
@@ -66,7 +74,7 @@ export default async function DashboardPage() {
   const userName = headersList.get("x-user-name") || "Admin";
 
   const [stats, recentComplaints] = await Promise.all([
-    getDashboardData(),
+    getCachedDashboardData(),
     prisma.complaint.findMany({
       orderBy: { createdAt: "desc" },
       take: 10,
