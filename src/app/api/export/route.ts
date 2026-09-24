@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth";
 import { CATEGORIES, STATUSES } from "@/lib/validations";
 import { getSLAStatus } from "@/lib/sla";
 
+export const dynamic = "force-dynamic";
+
 // GET /api/export?status=...&category=...&q=... — Admin CSV export
 export async function GET(request: NextRequest) {
   try {

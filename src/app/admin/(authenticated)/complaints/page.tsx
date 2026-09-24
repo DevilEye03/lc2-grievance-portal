@@ -54,7 +54,7 @@ export default async function ComplaintsPage({ searchParams }: PageProps) {
   return (
     <div>
       <AdminTopbar title="All Complaints" userName={userName} />
-      <div className="p-6">
+      <div className="p-3.5 sm:p-6">
         <Suspense fallback={<PageSpinner />}>
           <ComplaintsTable
             complaints={complaints as any}

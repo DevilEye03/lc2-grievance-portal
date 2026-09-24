@@ -99,7 +99,7 @@ export function ComplaintDetail({ complaint, userName }: ComplaintDetailProps) {
         </div>
 
         {/* Student info grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-5 border-t border-gray-100 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-gray-100 text-sm">
           <div className="flex items-start gap-2">
             <User className="h-4 w-4 text-gray-400 mt-0.5" />
             <div>
@@ -204,7 +204,7 @@ export function ComplaintDetail({ complaint, userName }: ComplaintDetailProps) {
           />
         </div>
         <div className="mt-4">
-          <Button onClick={handleStatusUpdate} loading={saving}>
+          <Button onClick={handleStatusUpdate} loading={saving} className="w-full sm:w-auto">
             Update Status
           </Button>
         </div>

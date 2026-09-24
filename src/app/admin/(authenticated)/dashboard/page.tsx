@@ -7,7 +7,7 @@ import { Badge, SLABadge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { getSLAStatus, avgResolutionDays, formatDate } from "@/lib/sla";
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { Eye, ChevronRight } from "lucide-react";
 import type { DashboardStats as Stats } from "@/types";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -89,30 +89,65 @@ export default async function DashboardPage() {
   return (
     <div>
       <AdminTopbar title="Dashboard" userName={userName} />
-      <div className="p-6 space-y-6">
+      <div className="p-3.5 sm:p-6 space-y-4 sm:space-y-6">
         <DashboardStats stats={stats} />
 
         {/* Recent Complaints */}
         <Card padding="none">
-          <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wider">
               Recent Complaints
             </h3>
             <Link
               href="/admin/complaints"
-              className="text-sm text-brand-600 hover:text-brand-800 font-medium"
+              className="text-xs sm:text-sm text-brand-600 hover:text-brand-800 font-semibold flex items-center gap-1"
             >
-              View All →
+              <span>View All</span>
+              <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="overflow-x-auto">
+
+          {/* Mobile Recent Complaints List (< sm) */}
+          <div className="sm:hidden divide-y divide-gray-100">
+            {recentComplaints.map((c) => {
+              const sla = getSLAStatus(new Date(c.slaDueDate), c.status);
+              return (
+                <Link
+                  key={c.id}
+                  href={`/admin/complaints/${c.id}`}
+                  className={`p-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors block ${
+                    sla === "breached" ? "bg-rose-50/60" : ""
+                  }`}
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-mono text-xs font-bold text-brand-700">
+                        {c.ticketId}
+                      </span>
+                      <span className="text-[11px] text-gray-400">
+                        {formatDate(c.createdAt)}
+                      </span>
+                    </div>
+                    <p className="text-xs font-semibold text-gray-900 truncate">{c.studentName}</p>
+                    <p className="text-[11px] text-gray-500">{c.studentRoll}</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Badge status={c.status} />
+                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Desktop Table (hidden sm:block) */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
                   <th className="text-left px-4 py-3 font-semibold text-gray-600">Ticket ID</th>
-                  <th className="text-left px-4 py-3 font-semibold text-gray-600 hidden sm:table-cell">
-                    Student
-                  </th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-600">Student</th>
                   <th className="text-left px-4 py-3 font-semibold text-gray-600 hidden md:table-cell">
                     Filed
                   </th>
@@ -136,7 +171,7 @@ export default async function DashboardPage() {
                       <td className="px-4 py-3 font-mono text-xs font-semibold text-brand-700">
                         {c.ticketId}
                       </td>
-                      <td className="px-4 py-3 hidden sm:table-cell">
+                      <td className="px-4 py-3">
                         <p className="font-medium text-gray-900">{c.studentName}</p>
                         <p className="text-xs text-gray-500">{c.studentRoll}</p>
                       </td>

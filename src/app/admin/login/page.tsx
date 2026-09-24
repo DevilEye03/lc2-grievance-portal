@@ -44,10 +44,10 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-brand-950 flex items-center justify-center p-3.5 sm:p-6">
       <div className="w-full max-w-sm">
         {/* Brand */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-brand-600 shadow-lg mb-4">
             <Scale className="h-7 w-7 text-white" />
           </div>
@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
           <p className="text-brand-400 text-sm mt-1">LAW CENTRE II Grievance Portal</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">Sign In</h2>
           <form onSubmit={handleLogin} className="space-y-4">
             <Input

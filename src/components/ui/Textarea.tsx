@@ -27,7 +27,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           value={value}
           maxLength={maxLength}
           className={cn(
-            "block w-full rounded-lg border px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 resize-y",
+            "block w-full rounded-lg border px-3 py-2.5 text-base sm:text-sm text-gray-900 placeholder-gray-400 resize-y",
             "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent",
             "transition-colors duration-150",
             error

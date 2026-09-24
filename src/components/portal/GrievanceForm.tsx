@@ -166,38 +166,40 @@ export function GrievanceForm() {
   // ─── Success card ────────────────────────────────────────────────────────
   if (successTicket) {
     return (
-      <Card className="text-center max-w-lg mx-auto">
+      <Card className="text-center max-w-lg mx-auto p-4 sm:p-8">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-16 w-16 rounded-full bg-emerald-100 flex items-center justify-center">
-            <CheckCircle className="h-8 w-8 text-emerald-600" />
+          <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+            <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-600" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Grievance Submitted!</h2>
-            <p className="text-gray-500 mt-1">
-              Your complaint has been registered. Save your Ticket ID.
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Grievance Submitted!</h2>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              Your complaint has been successfully registered. Please save your Ticket ID below.
             </p>
           </div>
 
-          <div className="bg-brand-50 border-2 border-brand-200 rounded-xl px-8 py-4 w-full">
-            <p className="text-xs text-brand-600 font-medium uppercase tracking-wider mb-1">
+          <div className="bg-brand-50 border-2 border-brand-200 rounded-xl px-4 py-3 sm:px-8 sm:py-4 w-full">
+            <p className="text-[10px] sm:text-xs text-brand-600 font-semibold uppercase tracking-wider mb-1">
               Ticket ID
             </p>
-            <p className="text-3xl font-bold text-brand-700 tracking-wider">{successTicket}</p>
+            <p className="text-2xl sm:text-3xl font-extrabold text-brand-700 tracking-wider font-mono">
+              {successTicket}
+            </p>
           </div>
 
-          <div className="flex gap-3 w-full">
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
             <Button
               variant="outline"
-              className="flex-1"
+              className="flex-1 justify-center py-2.5"
               onClick={copyTicket}
             >
               <Copy className="h-4 w-4" />
-              {copied ? "Copied!" : "Copy ID"}
+              {copied ? "Copied!" : "Copy Ticket ID"}
             </Button>
             <Button
-              className="flex-1"
+              className="flex-1 justify-center py-2.5"
               onClick={() =>
-                router.push(`/track?ticketId=${successTicket}`)
+                router.push(`/track?ticketId=${successTicket}&email=${encodeURIComponent(form.studentEmail)}`)
               }
             >
               <Search className="h-4 w-4" />
@@ -206,7 +208,7 @@ export function GrievanceForm() {
           </div>
 
           <p className="text-xs text-gray-500">
-            A confirmation email has been sent to <strong>{form.studentEmail}</strong>
+            A confirmation email has been dispatched to <strong>{form.studentEmail}</strong>
           </p>
         </div>
       </Card>
@@ -217,9 +219,23 @@ export function GrievanceForm() {
   const categoryLabel = CATEGORIES.find((c) => c.value === form.category)?.label || form.category;
 
   return (
-    <Card className="max-w-2xl mx-auto">
-      {/* Step indicator */}
-      <div className="flex items-center mb-8">
+    <Card className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+      {/* Mobile Step Indicator */}
+      <div className="sm:hidden mb-6">
+        <div className="flex items-center justify-between text-xs font-semibold text-gray-700 mb-2">
+          <span className="text-brand-700">Step {step + 1} of {STEPS.length}</span>
+          <span className="text-gray-500">{STEPS[step]}</span>
+        </div>
+        <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+          <div
+            className="bg-brand-600 h-full rounded-full transition-all duration-300"
+            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Desktop Step Indicator */}
+      <div className="hidden sm:flex items-center mb-8">
         {STEPS.map((label, i) => (
           <div key={i} className="flex items-center flex-1 last:flex-none">
             <div className="flex flex-col items-center">
@@ -235,7 +251,7 @@ export function GrievanceForm() {
                 {i < step ? "✓" : i + 1}
               </div>
               <span
-                className={`text-xs mt-1 hidden sm:block font-medium ${
+                className={`text-xs mt-1 font-medium ${
                   i === step ? "text-brand-600" : i < step ? "text-gray-600" : "text-gray-400"
                 }`}
               >
@@ -254,7 +270,7 @@ export function GrievanceForm() {
       {/* ─── Step 0: Personal Info ─── */}
       {step === 0 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Personal Information</h2>
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">Personal Information</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Student Full Name"
@@ -298,7 +314,7 @@ export function GrievanceForm() {
       {/* ─── Step 1: Category & Subject ─── */}
       {step === 1 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Grievance Category</h2>
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">Grievance Category</h2>
           <Select
             label="Department / Category"
             options={CATEGORIES}
@@ -324,14 +340,14 @@ export function GrievanceForm() {
       {/* ─── Step 2: Description & Attachment ─── */}
       {step === 2 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Detailed Description</h2>
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">Detailed Description</h2>
           <Textarea
             label="Detailed Description"
             placeholder="Provide a detailed description of your grievance (minimum 30 characters)..."
             value={form.description}
             onChange={(e) => set("description", e.target.value)}
             error={errors.description}
-            rows={6}
+            rows={5}
             maxLength={5000}
             showCount
             required
@@ -346,7 +362,7 @@ export function GrievanceForm() {
               <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
                 <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
                 <span className="text-sm text-emerald-700 flex-1 truncate">
-                  {form.attachment?.name}
+                  {form.attachment?.name || "Attachment uploaded"}
                 </span>
                 <button
                   type="button"
@@ -354,25 +370,25 @@ export function GrievanceForm() {
                     setAttachmentUrl(null);
                     setForm((prev) => ({ ...prev, attachment: null }));
                   }}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="p-1 text-gray-400 hover:text-gray-600 rounded"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-brand-400 hover:bg-brand-50 transition-colors">
+              <label className="flex flex-col items-center justify-center w-full min-h-[110px] p-4 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-brand-400 hover:bg-brand-50 transition-colors">
                 {uploadingFile ? (
                   <div className="flex items-center gap-2 text-brand-600">
                     <div className="h-5 w-5 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
-                    <span className="text-sm">Uploading...</span>
+                    <span className="text-sm font-medium">Uploading attachment...</span>
                   </div>
                 ) : (
                   <>
                     <Upload className="h-6 w-6 text-gray-400 mb-1" />
-                    <p className="text-sm text-gray-500">
-                      Click to upload <span className="text-brand-600 font-medium">JPG, PNG, PDF</span>
+                    <p className="text-xs sm:text-sm text-gray-600 text-center">
+                      Tap or click to upload <span className="text-brand-600 font-medium">JPG, PNG, PDF</span>
                     </p>
-                    <p className="text-xs text-gray-400">Max file size: 5MB</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">Maximum file size: 5MB</p>
                   </>
                 )}
                 <input
@@ -394,47 +410,49 @@ export function GrievanceForm() {
       {/* ─── Step 3: Review & Submit ─── */}
       {step === 3 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-900">Review & Submit</h2>
-          <div className="bg-gray-50 rounded-xl p-5 space-y-3 text-sm">
-            <div className="grid grid-cols-2 gap-3">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">Review & Submit</h2>
+          <div className="bg-gray-50 rounded-xl p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-3 border-b border-gray-200">
               <div>
-                <p className="text-gray-500">Name</p>
-                <p className="font-medium text-gray-900">{form.studentName}</p>
+                <p className="text-gray-500">Student Name</p>
+                <p className="font-semibold text-gray-900">{form.studentName}</p>
               </div>
               <div>
-                <p className="text-gray-500">Roll No.</p>
-                <p className="font-medium text-gray-900">{form.studentRoll}</p>
+                <p className="text-gray-500">Roll / Reg Number</p>
+                <p className="font-semibold text-gray-900">{form.studentRoll}</p>
               </div>
               <div>
-                <p className="text-gray-500">Email</p>
-                <p className="font-medium text-gray-900">{form.studentEmail}</p>
+                <p className="text-gray-500">Email Address</p>
+                <p className="font-semibold text-gray-900 break-all">{form.studentEmail}</p>
               </div>
               <div>
                 <p className="text-gray-500">Phone</p>
-                <p className="font-medium text-gray-900">{form.studentPhone || "—"}</p>
+                <p className="font-semibold text-gray-900">{form.studentPhone || "—"}</p>
               </div>
               <div>
                 <p className="text-gray-500">Category</p>
-                <p className="font-medium text-gray-900">{categoryLabel}</p>
+                <p className="font-semibold text-gray-900">{categoryLabel}</p>
               </div>
               <div>
                 <p className="text-gray-500">Attachment</p>
-                <p className="font-medium text-gray-900">
+                <p className="font-semibold text-gray-900 truncate">
                   {form.attachment ? form.attachment.name : "None"}
                 </p>
               </div>
             </div>
             <div>
               <p className="text-gray-500">Subject</p>
-              <p className="font-medium text-gray-900">{form.subject}</p>
+              <p className="font-semibold text-gray-900">{form.subject}</p>
             </div>
             <div>
               <p className="text-gray-500">Description</p>
-              <p className="font-medium text-gray-900 whitespace-pre-wrap">{form.description}</p>
+              <p className="font-medium text-gray-800 whitespace-pre-wrap leading-relaxed mt-0.5">
+                {form.description}
+              </p>
             </div>
           </div>
           {errors.submit && (
-            <p className="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-lg px-4 py-3">
+            <p className="text-xs sm:text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-lg px-3.5 py-2.5">
               {errors.submit}
             </p>
           )}
@@ -442,16 +460,21 @@ export function GrievanceForm() {
       )}
 
       {/* Navigation buttons */}
-      <div className="flex justify-between mt-8 pt-6 border-t border-gray-100">
-        <Button variant="outline" onClick={back} disabled={step === 0}>
+      <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-100">
+        <Button
+          variant="outline"
+          onClick={back}
+          disabled={step === 0}
+          className="w-full sm:w-auto justify-center"
+        >
           <ChevronLeft className="h-4 w-4" /> Back
         </Button>
         {step < STEPS.length - 1 ? (
-          <Button onClick={next}>
+          <Button onClick={next} className="w-full sm:w-auto justify-center">
             Next <ChevronRight className="h-4 w-4" />
           </Button>
         ) : (
-          <Button onClick={handleSubmit} loading={submitting}>
+          <Button onClick={handleSubmit} loading={submitting} className="w-full sm:w-auto justify-center">
             Submit Grievance
           </Button>
         )}

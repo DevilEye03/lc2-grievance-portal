@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { Badge, SLABadge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { CATEGORIES, STATUSES } from "@/lib/validations";
 import { formatDate } from "@/lib/sla";
 import type { Complaint } from "@/types";
-import { Search, Download, Eye, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { Search, Download, Eye, ChevronLeft, ChevronRight, Filter, Calendar, User, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ComplaintsTableProps {
@@ -74,46 +73,114 @@ export function ComplaintsTable({ complaints, total, page, totalPages }: Complai
 
   return (
     <div className="space-y-4">
-      {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
-        <form onSubmit={handleSearch} className="flex gap-2 flex-1 min-w-[240px]">
+      {/* Responsive Filters */}
+      <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3">
+        <form onSubmit={handleSearch} className="flex gap-2 flex-1 w-full sm:w-auto sm:min-w-[220px]">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search ticket ID, name, roll no..."
+              placeholder="Search ticket, name, roll..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
           </div>
-          <Button type="submit" size="sm" variant="outline">
+          <Button type="submit" size="sm" variant="outline" className="px-3">
             <Search className="h-4 w-4" />
           </Button>
         </form>
 
-        <Select
-          options={[{ value: "", label: "All Statuses" }, ...STATUSES]}
-          value={searchParams.get("status") || ""}
-          onChange={(e) => handleFilter("status", e.target.value)}
-          className="w-40 py-2 text-sm"
-        />
+        <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
+          <Select
+            options={[{ value: "", label: "All Statuses" }, ...STATUSES]}
+            value={searchParams.get("status") || ""}
+            onChange={(e) => handleFilter("status", e.target.value)}
+            className="w-full sm:w-36 py-2 text-xs sm:text-sm"
+          />
 
-        <Select
-          options={[{ value: "", label: "All Categories" }, ...CATEGORIES]}
-          value={searchParams.get("category") || ""}
-          onChange={(e) => handleFilter("category", e.target.value)}
-          className="w-48 py-2 text-sm"
-        />
+          <Select
+            options={[{ value: "", label: "All Categories" }, ...CATEGORIES]}
+            value={searchParams.get("category") || ""}
+            onChange={(e) => handleFilter("category", e.target.value)}
+            className="w-full sm:w-44 py-2 text-xs sm:text-sm"
+          />
+        </div>
 
-        <Button variant="outline" size="sm" onClick={handleExport} loading={exporting}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleExport}
+          loading={exporting}
+          className="w-full sm:w-auto justify-center"
+        >
           <Download className="h-4 w-4" />
           Export CSV
         </Button>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      {/* ─── Mobile Card List (sm:hidden) ─── */}
+      <div className="sm:hidden space-y-3">
+        {complaints.length === 0 ? (
+          <div className="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-400">
+            <Filter className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <p className="text-sm">No complaints found matching your filters.</p>
+          </div>
+        ) : (
+          complaints.map((c) => {
+            const breached = isSLABreached(c);
+            const categoryLabel = CATEGORIES.find((cat) => cat.value === c.category)?.label || c.category;
+
+            return (
+              <div
+                key={c.id}
+                className={cn(
+                  "bg-white rounded-xl border border-gray-200 p-4 shadow-xs space-y-3 transition-colors",
+                  breached && "border-rose-300 bg-rose-50/50"
+                )}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-brand-700">
+                      {c.ticketId}
+                    </span>
+                    <p className="text-xs text-gray-500 font-medium mt-0.5">{formatDate(c.createdAt)}</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge status={c.status} />
+                    {breached && (
+                      <Badge status="SLA_BREACH" pulse className="text-[10px] py-0.5 px-1.5" />
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 line-clamp-1">{c.studentName}</p>
+                  <p className="text-xs text-gray-500">{c.studentRoll}</p>
+                </div>
+
+                <div className="flex items-center gap-1.5 text-xs text-gray-600 bg-gray-50 p-2 rounded-lg">
+                  <Tag className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                  <span className="truncate">{categoryLabel}</span>
+                </div>
+
+                <div className="pt-2 border-t border-gray-100 flex items-center justify-between">
+                  <SLABadge slaDueDate={c.slaDueDate} status={c.status} />
+                  <Link href={`/admin/complaints/${c.id}`} className="flex-1 max-w-[120px]">
+                    <Button size="sm" variant="outline" className="w-full justify-center text-xs py-1.5 h-8">
+                      <Eye className="h-3.5 w-3.5" />
+                      View
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* ─── Desktop Table (hidden sm:block) ─── */}
+      <div className="hidden sm:block bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -123,9 +190,7 @@ export function ComplaintsTable({ complaints, total, page, totalPages }: Complai
                 <th className="text-left px-4 py-3 font-semibold text-gray-600 hidden md:table-cell">
                   Category
                 </th>
-                <th className="text-left px-4 py-3 font-semibold text-gray-600 hidden sm:table-cell">
-                  Filed
-                </th>
+                <th className="text-left px-4 py-3 font-semibold text-gray-600">Filed</th>
                 <th className="text-left px-4 py-3 font-semibold text-gray-600">Status</th>
                 <th className="text-left px-4 py-3 font-semibold text-gray-600 hidden lg:table-cell">
                   SLA
@@ -168,7 +233,7 @@ export function ComplaintsTable({ complaints, total, page, totalPages }: Complai
                           {CATEGORIES.find((cat) => cat.value === c.category)?.label || c.category}
                         </span>
                       </td>
-                      <td className="px-4 py-3 hidden sm:table-cell text-xs text-gray-500">
+                      <td className="px-4 py-3 text-xs text-gray-500">
                         {formatDate(c.createdAt)}
                       </td>
                       <td className="px-4 py-3">
@@ -196,37 +261,37 @@ export function ComplaintsTable({ complaints, total, page, totalPages }: Complai
             </tbody>
           </table>
         </div>
+      </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-gray-50">
-          <p className="text-sm text-gray-500">
-            Showing {complaints.length} of {total} complaints
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-gray-500 py-2">
+          <p className="text-center sm:text-left">
+            Showing page <span className="font-medium text-gray-900">{page}</span> of{" "}
+            <span className="font-medium text-gray-900">{totalPages}</span> ({total} total)
           </p>
           <div className="flex items-center gap-2">
-            <Link
-              href={`${pathname}?${buildQuery({ page: String(page - 1) })}`}
-              className={cn(
-                "p-1.5 rounded-lg border border-gray-300 text-gray-500 hover:bg-white transition-colors",
-                page <= 1 && "opacity-40 pointer-events-none"
-              )}
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={page <= 1}
+              onClick={() => router.push(`${pathname}?${buildQuery({ page: String(page - 1) })}`)}
             >
               <ChevronLeft className="h-4 w-4" />
-            </Link>
-            <span className="text-sm text-gray-700 font-medium">
-              {page} / {totalPages}
-            </span>
-            <Link
-              href={`${pathname}?${buildQuery({ page: String(page + 1) })}`}
-              className={cn(
-                "p-1.5 rounded-lg border border-gray-300 text-gray-500 hover:bg-white transition-colors",
-                page >= totalPages && "opacity-40 pointer-events-none"
-              )}
+              Prev
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={page >= totalPages}
+              onClick={() => router.push(`${pathname}?${buildQuery({ page: String(page + 1) })}`)}
             >
+              Next
               <ChevronRight className="h-4 w-4" />
-            </Link>
+            </Button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -28,7 +28,7 @@ export default async function ComplaintDetailPage({ params }: PageProps) {
   return (
     <div>
       <AdminTopbar title="Complaint Detail" userName={userName} />
-      <div className="p-6">
+      <div className="p-3.5 sm:p-6">
         <ComplaintDetail complaint={complaint as never} userName={userName} />
       </div>
     </div>

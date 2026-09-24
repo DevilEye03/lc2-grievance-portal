@@ -156,10 +156,10 @@ export default function WhatsAppSimulatorPage() {
     <div className="min-h-full flex flex-col bg-gray-50">
       <AdminTopbar title="WhatsApp Bot Simulator" userName="Admin" />
 
-      <div className="p-6 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="p-3.5 sm:p-6 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: WhatsApp Chat Device Frame */}
         <div className="lg:col-span-7 flex flex-col">
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden flex flex-col h-[700px]">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden flex flex-col h-[560px] sm:h-[650px] lg:h-[700px]">
             {/* WhatsApp Header */}
             <div className="bg-[#075e54] text-white px-4 py-3 flex items-center justify-between shadow">
               <div className="flex items-center gap-3">

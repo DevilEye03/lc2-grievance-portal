@@ -104,14 +104,14 @@ export function ReplyForm({
               showCount
               error={error}
             />
-            <div className="flex items-center gap-3 mt-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-3">
               <Select
                 options={FINAL_STATUSES}
                 value={finalStatus}
                 onChange={(e) => setFinalStatus(e.target.value)}
-                className="w-36"
+                className="w-full sm:w-36"
               />
-              <Button onClick={handleSubmit} loading={saving}>
+              <Button onClick={handleSubmit} loading={saving} className="w-full sm:w-auto">
                 Update Reply
               </Button>
             </div>
@@ -150,20 +150,18 @@ export function ReplyForm({
         required
       />
 
-      <div className="flex items-center gap-3 mt-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 mt-4">
         <Select
           label="Mark As"
           options={FINAL_STATUSES}
           value={finalStatus}
           onChange={(e) => setFinalStatus(e.target.value)}
-          className="w-40"
+          className="w-full sm:w-40"
         />
-        <div className="pt-5">
-          <Button onClick={handleSubmit} loading={saving} disabled={reply.trim().length < 20}>
-            <ShieldCheck className="h-4 w-4" />
-            Post Official Reply
-          </Button>
-        </div>
+        <Button onClick={handleSubmit} loading={saving} disabled={reply.trim().length < 20} className="w-full sm:w-auto">
+          <ShieldCheck className="h-4 w-4" />
+          Post Official Reply
+        </Button>
       </div>
 
       {reply.trim().length > 0 && reply.trim().length < 20 && (

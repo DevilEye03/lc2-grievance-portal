@@ -33,7 +33,7 @@ export default async function UsersPage() {
   return (
     <div>
       <AdminTopbar title="User Management" userName={userName} />
-      <div className="p-6">
+      <div className="p-3.5 sm:p-6">
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-gray-900">Admin Users</h2>
           <p className="text-sm text-gray-500 mt-1">

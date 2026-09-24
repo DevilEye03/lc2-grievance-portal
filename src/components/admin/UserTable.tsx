@@ -5,12 +5,11 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Modal } from "@/components/ui/Modal";
-import { Badge } from "@/components/ui/Badge";
 import { toast } from "@/components/ui/Toast";
 import { ROLES } from "@/lib/validations";
 import { formatDate } from "@/lib/sla";
 import type { AdminUser } from "@/types";
-import { Plus, Edit2, Trash2, ShieldCheck } from "lucide-react";
+import { Plus, Edit2, Trash2, ShieldCheck, Mail, Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface UserTableProps {
@@ -101,7 +100,6 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
       return;
     }
     if (!confirm(`Delete user ${user.name}? This action cannot be undone.`)) return;
-
     try {
       const res = await fetch(`/api/users/${user.id}`, { method: "DELETE" });
       const data = await res.json();
@@ -119,21 +117,80 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={openCreate}>
+        <Button onClick={openCreate} className="w-full sm:w-auto justify-center">
           <Plus className="h-4 w-4" />
           Add User
         </Button>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      {/* ─── Mobile Card List (sm:hidden) ─── */}
+      <div className="sm:hidden space-y-3">
+        {users.map((user) => (
+          <div key={user.id} className="bg-white rounded-xl border border-gray-200 p-4 shadow-xs space-y-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 text-sm font-bold flex-shrink-0">
+                  {user.name.charAt(0)}
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <p className="font-semibold text-gray-900 text-sm">{user.name}</p>
+                    {user.id === currentUserId && (
+                      <span className="text-[10px] text-brand-600 font-bold bg-brand-50 px-1.5 py-0.5 rounded">You</span>
+                    )}
+                  </div>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border mt-1 ${
+                      roleColors[user.role] || "bg-gray-100 text-gray-600 border-gray-300"
+                    }`}
+                  >
+                    {user.role === "SUPER_ADMIN" && <ShieldCheck className="h-3 w-3" />}
+                    {user.role.replace("_", " ")}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-xs text-gray-600 space-y-1 bg-gray-50 p-2.5 rounded-lg">
+              <div className="flex items-center gap-1.5 truncate">
+                <Mail className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
+                <span className="truncate">{user.email}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-gray-400">
+                <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
+                <span>Joined {formatDate(user.createdAt)}</span>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-gray-100 flex items-center justify-end gap-2">
+              <Button size="sm" variant="outline" onClick={() => openEdit(user)} className="text-xs h-8 px-3">
+                <Edit2 className="h-3.5 w-3.5" />
+                Edit
+              </Button>
+              {user.id !== currentUserId && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleDelete(user)}
+                  className="text-xs h-8 px-3 text-rose-600 hover:text-rose-700 hover:bg-rose-50 border-rose-200"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Delete
+                </Button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ─── Desktop Table (hidden sm:block) ─── */}
+      <div className="hidden sm:block bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-200">
               <th className="text-left px-4 py-3 font-semibold text-gray-600">Name</th>
               <th className="text-left px-4 py-3 font-semibold text-gray-600">Email</th>
-              <th className="text-left px-4 py-3 font-semibold text-gray-600 hidden sm:table-cell">
-                Role
-              </th>
+              <th className="text-left px-4 py-3 font-semibold text-gray-600">Role</th>
               <th className="text-left px-4 py-3 font-semibold text-gray-600 hidden md:table-cell">
                 Created
               </th>
@@ -157,7 +214,7 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
                   </div>
                 </td>
                 <td className="px-4 py-3 text-gray-600">{user.email}</td>
-                <td className="px-4 py-3 hidden sm:table-cell">
+                <td className="px-4 py-3">
                   <span
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${
                       roleColors[user.role] || "bg-gray-100 text-gray-600 border-gray-300"
@@ -175,14 +232,16 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
                     <Button size="sm" variant="ghost" onClick={() => openEdit(user)}>
                       <Edit2 className="h-4 w-4" />
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDelete(user)}
-                      className="text-rose-500 hover:text-rose-700 hover:bg-rose-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {user.id !== currentUserId && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDelete(user)}
+                        className="text-rose-500 hover:text-rose-700 hover:bg-rose-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -218,6 +277,7 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={errors.password}
+            placeholder={editUser ? "••••••••" : "Min 8 characters"}
             required={!editUser}
           />
           <Select
@@ -226,11 +286,12 @@ export function UserTable({ users, currentUserId }: UserTableProps) {
             value={role}
             onChange={(e) => setRole(e.target.value)}
           />
-          <div className="flex justify-end gap-3 pt-2">
-            <Button variant="outline" onClick={() => setIsOpen(false)}>
+
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-100">
+            <Button variant="outline" onClick={() => setIsOpen(false)} className="w-full sm:w-auto justify-center">
               Cancel
             </Button>
-            <Button onClick={handleSave} loading={saving}>
+            <Button onClick={handleSave} loading={saving} className="w-full sm:w-auto justify-center">
               {editUser ? "Save Changes" : "Create User"}
             </Button>
           </div>
