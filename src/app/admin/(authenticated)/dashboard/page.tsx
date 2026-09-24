@@ -16,20 +16,17 @@ async function getDashboardData(): Promise<Stats> {
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const [allComplaints, thisMonth] = await Promise.all([
-    prisma.complaint.findMany({
-      select: {
-        status: true,
-        category: true,
-        slaDueDate: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    }),
-    prisma.complaint.count({
-      where: { createdAt: { gte: startOfMonth } },
-    }),
-  ]);
+  const allComplaints = await prisma.complaint.findMany({
+    select: {
+      status: true,
+      category: true,
+      slaDueDate: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  const thisMonth = allComplaints.filter((c) => new Date(c.createdAt) >= startOfMonth).length;
 
   const activePending = allComplaints.filter(
     (c) => c.status === "REGISTERED" || c.status === "IN_PROGRESS" || c.status === "ACKNOWLEDGED"
