@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Scale, FileText, Search, ShieldCheck, Menu, X, ArrowRight } from "lucide-react";
+import { Scale, FileText, Search, Menu, X, ArrowRight } from "lucide-react";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,13 +41,6 @@ export function Navbar() {
             >
               <Search className="h-4 w-4" />
               <span>Track Status</span>
-            </Link>
-            <Link
-              href="/admin"
-              className="flex items-center gap-1.5 ml-2 px-3.5 py-2 rounded-lg text-sm font-medium bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              <span>Admin Portal</span>
             </Link>
           </nav>
 
@@ -112,17 +105,6 @@ export function Navbar() {
               </span>
               <ArrowRight className="h-4 w-4 text-gray-400" />
             </Link>
-
-            <div className="pt-2 border-t border-gray-100">
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 transition-colors shadow-sm"
-              >
-                <ShieldCheck className="h-4 w-4" />
-                Admin Portal Login
-              </Link>
-            </div>
           </div>
         </div>
       )}
