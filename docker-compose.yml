@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: grievance_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: grievance_db
+      MYSQL_USER: ${MYSQL_USER:-grievance}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-grievance123}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+      interval: 10s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grievance_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: mysql://${MYSQL_USER:-grievance}:${MYSQL_PASSWORD:-grievance123}@db:3306/grievance_db
+      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-LAW CENTRE II Grievance Portal <noreply@lc2.du.ac.in>}
+      NODE_ENV: production
+    volumes:
+      - uploads_data:/app/public/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+    name: grievance_mysql_data
+  uploads_data:
+    name: grievance_uploads_data
