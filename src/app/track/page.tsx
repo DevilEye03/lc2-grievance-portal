@@ -8,6 +8,9 @@ import { PageSpinner } from "@/components/ui/Spinner";
 import { Search, AlertCircle } from "lucide-react";
 import type { Complaint } from "@/types";
 
+import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Track Grievance" };
 
 async function fetchComplaint(
@@ -15,16 +18,68 @@ async function fetchComplaint(
   email: string
 ): Promise<{ complaint?: Complaint; error?: string }> {
   try {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const res = await fetch(
-      `${appUrl}/api/track?ticketId=${encodeURIComponent(ticketId)}&email=${encodeURIComponent(email)}`,
-      { cache: "no-store" }
-    );
-    const data = await res.json();
-    if (data.success) return { complaint: data.data };
-    return { error: data.error };
-  } catch {
-    return { error: "Unable to connect to server. Please try again." };
+    const cleanTicketId = ticketId.trim().toUpperCase();
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanTicketId || !cleanEmail) {
+      return { error: "Both Ticket ID and registered email are required." };
+    }
+
+    if (!/^GRV-\d{4}-\d{4}$/.test(cleanTicketId)) {
+      return { error: "Invalid Ticket ID format. Example: GRV-2026-0001" };
+    }
+
+    const complaint = await prisma.complaint.findFirst({
+      where: {
+        ticketId: cleanTicketId,
+        studentEmail: cleanEmail,
+      },
+      include: {
+        statusLogs: { orderBy: { createdAt: "asc" } },
+      },
+    });
+
+    if (!complaint) {
+      return {
+        error:
+          "No grievance found with this Ticket ID and email combination. Please check your details.",
+      };
+    }
+
+    // Mask sensitive fields and serialize Date objects to ISO strings
+    const safe: Complaint = {
+      id: complaint.id,
+      ticketId: complaint.ticketId,
+      studentName: complaint.studentName,
+      studentRoll: complaint.studentRoll,
+      studentEmail: complaint.studentEmail,
+      studentPhone: complaint.studentPhone ? "***" : null,
+      category: complaint.category,
+      subject: complaint.subject,
+      description: complaint.description,
+      attachmentUrl: complaint.attachmentUrl,
+      status: complaint.status,
+      assignedTo: complaint.assignedTo,
+      authorityReply: complaint.authorityReply,
+      repliedAt: complaint.repliedAt ? complaint.repliedAt.toISOString() : null,
+      ackDueDate: complaint.ackDueDate.toISOString(),
+      slaDueDate: complaint.slaDueDate.toISOString(),
+      createdAt: complaint.createdAt.toISOString(),
+      updatedAt: complaint.updatedAt.toISOString(),
+      statusLogs: complaint.statusLogs.map((log) => ({
+        id: log.id,
+        complaintId: log.complaintId,
+        status: log.status,
+        comment: log.comment,
+        changedBy: log.changedBy,
+        createdAt: log.createdAt.toISOString(),
+      })),
+    };
+
+    return { complaint: safe };
+  } catch (error) {
+    console.error("Track error:", error);
+    return { error: "Unable to retrieve grievance details. Please try again." };
   }
 }
 
