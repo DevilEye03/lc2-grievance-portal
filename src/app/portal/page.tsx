@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FileText, Search, ShieldCheck, Clock, CheckCircle, ArrowRight, Scale } from "lucide-react";
 
 export const metadata: Metadata = { title: "Home" };
+export const revalidate = 3600;
 
 const HOW_IT_WORKS = [
   {

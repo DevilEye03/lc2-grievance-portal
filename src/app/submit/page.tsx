@@ -4,6 +4,7 @@ import { GrievanceForm } from "@/components/portal/GrievanceForm";
 import { FileText } from "lucide-react";
 
 export const metadata: Metadata = { title: "Submit Grievance" };
+export const revalidate = 3600;
 
 export default function SubmitPage() {
   return (
