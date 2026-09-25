@@ -14,8 +14,8 @@ export const metadata: Metadata = {
     default: "Law Centre II Student Union Grievance Portal",
   },
   description:
-    "Official grievance redressal portal of the Law Centre-II Student Union, Faculty of Law, University of Delhi. Submit, track, and resolve student complaints transparently.",
-  keywords: ["grievance", "complaint", "Law Centre II", "Student Union", "Faculty of Law", "DU"],
+    "Official grievance redressal portal of the Law Centre-II Student Union. Submit, track, and resolve student complaints transparently.",
+  keywords: ["grievance", "complaint", "Law Centre II", "Student Union"],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

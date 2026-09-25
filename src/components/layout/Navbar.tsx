@@ -17,28 +17,24 @@ export function Navbar() {
             className="flex items-center gap-2.5 sm:gap-3 group"
             onClick={() => setMobileMenuOpen(false)}
           >
-            <div className="relative flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-br from-brand-950 via-brand-850 to-brand-700 text-white shadow-md shadow-brand-950/20 border border-brand-700/50 group-hover:scale-105 transition-transform flex-shrink-0">
-              <Scale className="h-5 w-5 text-amber-300 drop-shadow-sm" />
-              <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 border border-white"></span>
-              </span>
+            {/* Seal / Crest */}
+            <div className="flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-br from-slate-950 via-slate-900 to-brand-950 text-amber-400 shadow-sm border border-amber-500/25 group-hover:border-amber-400/50 group-hover:scale-105 transition-all flex-shrink-0">
+              <Scale className="h-5 w-5 sm:h-5.5 sm:w-5.5 text-amber-400 drop-shadow-xs" />
             </div>
-            <div className="flex flex-col justify-center">
-              <div className="flex items-center gap-1.5 flex-wrap leading-tight">
-                <span className="text-[12.5px] sm:text-[14.5px] font-black tracking-tight text-gray-950 uppercase font-sans">
+
+            {/* Typography */}
+            <div className="flex flex-col justify-center min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2 leading-none whitespace-nowrap">
+                <span className="text-[13.5px] sm:text-[16px] font-black tracking-tight text-slate-950 uppercase font-sans">
                   Law Centre II
                 </span>
-                <span className="text-[9px] sm:text-[9.5px] font-bold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200/90 px-1.5 py-0.5 rounded-full shadow-xs">
+                <span className="text-slate-300 font-light text-xs sm:text-sm">|</span>
+                <span className="text-[11.5px] sm:text-[13.5px] font-extrabold text-amber-700 uppercase tracking-tight">
                   Student Union
                 </span>
               </div>
-              <p className="text-[10px] sm:text-[11.5px] font-bold text-brand-600 tracking-wide uppercase mt-0.5 flex items-center gap-1.5 leading-none">
-                <span>Grievance Portal</span>
-                <span className="text-gray-300 hidden lg:inline">•</span>
-                <span className="text-[10px] font-normal text-gray-400 capitalize tracking-normal hidden lg:inline">
-                  Faculty of Law, DU
-                </span>
+              <p className="text-[9.5px] sm:text-[11px] font-extrabold text-brand-700 tracking-[0.18em] uppercase mt-1 leading-none">
+                Grievance Portal
               </p>
             </div>
           </Link>

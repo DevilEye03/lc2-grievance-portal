@@ -15,7 +15,7 @@ export default function PortalLandingPage() {
         {/* Minimal Hero Header */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-700 rounded-full px-3.5 py-1 text-xs font-semibold mb-3">
-            <span>Faculty of Law • University of Delhi</span>
+            <span>Official Student Grievance Redressal Platform</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
             Law Centre II <span className="text-brand-600">Student Union</span>
