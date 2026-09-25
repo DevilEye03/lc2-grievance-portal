@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="border-t border-gray-200 bg-white py-6 mt-auto">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-        <p>© {new Date().getFullYear()} LAW CENTRE II, University of Delhi. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Law Centre II Student Union, Faculty of Law, University of Delhi. All rights reserved.</p>
         <div className="flex items-center gap-3.5 sm:gap-4">
           <Link href="/submit" className="hover:text-brand-600 transition-colors">
             Submit Grievance

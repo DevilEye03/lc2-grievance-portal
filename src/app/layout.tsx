@@ -10,12 +10,12 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | LAW CENTRE II Grievance Portal",
-    default: "LAW CENTRE II Grievance Portal",
+    template: "%s | Law Centre II Student Union Grievance Portal",
+    default: "Law Centre II Student Union Grievance Portal",
   },
   description:
-    "Official grievance redressal portal for LAW CENTRE II. Submit, track, and resolve student complaints transparently.",
-  keywords: ["grievance", "complaint", "LAW CENTRE II", "student portal"],
+    "Official grievance redressal portal of the Law Centre-II Student Union, Faculty of Law, University of Delhi. Submit, track, and resolve student complaints transparently.",
+  keywords: ["grievance", "complaint", "Law Centre II", "Student Union", "Faculty of Law", "DU"],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

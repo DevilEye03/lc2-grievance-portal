@@ -18,10 +18,13 @@ export default function PortalLandingPage() {
             <span>Faculty of Law • University of Delhi</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-            LAW CENTRE II <span className="text-brand-600">Grievance Portal</span>
+            Law Centre II <span className="text-brand-600">Student Union</span>
+            <span className="block text-xl sm:text-3xl font-bold text-gray-800 mt-1">
+              Grievance Redressal Portal
+            </span>
           </h1>
           <p className="mt-2 text-sm sm:text-base text-gray-600 max-w-xl mx-auto">
-            A transparent and time-bound platform for student grievance redressal. Submit complaints, file anonymous whistleblower reports, and track resolutions.
+            Official student union platform for transparent and time-bound grievance resolution. Submit complaints, file anonymous whistleblower reports, and track outcomes.
           </p>
         </div>
 

@@ -51,7 +51,7 @@ export function AdminSidebar({ userRole, userName }: AdminSidebarProps) {
         {!collapsed && (
           <div className="min-w-0">
             <p className="text-sm font-bold leading-tight truncate">LAW CENTRE II</p>
-            <p className="text-xs text-brand-400">Grievance Portal</p>
+            <p className="text-xs text-brand-400">Student Union Portal</p>
           </div>
         )}
       </div>
