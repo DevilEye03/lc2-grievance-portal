@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
@@ -53,6 +53,12 @@ export function GrievanceForm() {
   const [copied, setCopied] = useState(false);
   const [copiedSecret, setCopiedSecret] = useState(false);
   const [copiedAll, setCopiedAll] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.search.includes("anonymous=true")) {
+      setForm((prev) => ({ ...prev, isAnonymous: true }));
+    }
+  }, []);
 
   function set(field: keyof FormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
