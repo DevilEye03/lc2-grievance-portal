@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { TrackForm } from "@/components/portal/TrackForm";
 import { TrackResult } from "@/components/portal/TrackResult";
 import { Card } from "@/components/ui/Card";
@@ -144,6 +145,7 @@ export default async function TrackPage({ searchParams }: TrackPageProps) {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

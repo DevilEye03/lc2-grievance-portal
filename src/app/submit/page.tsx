@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { GrievanceForm } from "@/components/portal/GrievanceForm";
 
 export const metadata: Metadata = { title: "Submit Grievance" };
-export const revalidate = 3600;
 
 export default function SubmitPage() {
   return (
@@ -20,6 +20,7 @@ export default function SubmitPage() {
           <GrievanceForm />
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

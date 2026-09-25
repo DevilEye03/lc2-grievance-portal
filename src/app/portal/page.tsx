@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import Link from "next/link";
 import { FileText, Search, Clock, ShieldCheck, ArrowRight, Lock } from "lucide-react";
 
 export const metadata: Metadata = { title: "Home" };
-export const revalidate = 3600;
 
 export default function PortalLandingPage() {
   return (
@@ -118,21 +118,7 @@ export default function PortalLandingPage() {
         </div>
       </main>
 
-      {/* Clean Minimal Footer */}
-      <footer className="border-t border-gray-200 bg-white py-6">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} LAW CENTRE II, University of Delhi. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link href="/submit" className="hover:text-brand-600 transition-colors">
-              Submit Grievance
-            </Link>
-            <span>•</span>
-            <Link href="/track" className="hover:text-brand-600 transition-colors">
-              Track Status
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
