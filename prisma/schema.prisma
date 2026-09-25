@@ -42,6 +42,8 @@ model Complaint {
   ackDueDate     DateTime
   slaDueDate     DateTime
   source         String    @default("WEB")
+  isAnonymous    Boolean   @default(false)
+  trackingSecret String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -49,6 +51,8 @@ model Complaint {
 
   @@index([ticketId])
   @@index([studentEmail])
+  @@index([trackingSecret])
+  @@index([isAnonymous])
   @@index([status])
   @@index([category])
   @@index([createdAt])

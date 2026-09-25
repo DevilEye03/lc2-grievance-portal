@@ -27,31 +27,68 @@ export const ROLES = [
 ] as const;
 
 // ─── Complaint Submission ──────────────────────────────────────────────────────
-export const complaintSubmitSchema = z.object({
-  studentName: z.string().min(2, "Name must be at least 2 characters").max(100),
-  studentRoll: z.string().min(2, "Roll number is required").max(50),
-  studentEmail: z.string().email("Please enter a valid email address"),
-  studentPhone: z
-    .string()
-    .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number")
-    .optional()
-    .or(z.literal("")),
-  category: z.enum([
-    "ACADEMIC",
-    "HOSTEL_MESS",
-    "EXAMINATION",
-    "INFRASTRUCTURE_MAINTENANCE",
-    "FEES_SCHOLARSHIP",
-    "ANTI_RAGGING",
-    "DISCIPLINARY",
-    "OTHER",
-  ]),
-  subject: z.string().min(5, "Subject is too short").max(120, "Subject must be under 120 characters"),
-  description: z
-    .string()
-    .min(30, "Description must be at least 30 characters")
-    .max(5000, "Description too long"),
-});
+export const complaintSubmitSchema = z
+  .object({
+    isAnonymous: z.boolean().optional().default(false),
+    studentName: z.string().max(100).optional().default("Anonymous Student"),
+    studentRoll: z.string().max(50).optional().default("ANONYMOUS"),
+    studentEmail: z.string().optional().or(z.literal("")),
+    studentPhone: z
+      .string()
+      .regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number")
+      .optional()
+      .or(z.literal("")),
+    category: z.enum([
+      "ACADEMIC",
+      "HOSTEL_MESS",
+      "EXAMINATION",
+      "INFRASTRUCTURE_MAINTENANCE",
+      "FEES_SCHOLARSHIP",
+      "ANTI_RAGGING",
+      "DISCIPLINARY",
+      "OTHER",
+    ]),
+    subject: z.string().min(5, "Subject is too short").max(120, "Subject must be under 120 characters"),
+    description: z
+      .string()
+      .min(30, "Description must be at least 30 characters")
+      .max(5000, "Description too long"),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.isAnonymous) {
+      if (!data.studentName || data.studentName.trim().length < 2) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["studentName"],
+          message: "Name must be at least 2 characters",
+        });
+      }
+      if (!data.studentRoll || data.studentRoll.trim().length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["studentRoll"],
+          message: "Roll number is required",
+        });
+      }
+      if (!data.studentEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.studentEmail.trim())) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["studentEmail"],
+          message: "Please enter a valid email address",
+        });
+      }
+    } else {
+      if (data.studentEmail && data.studentEmail.trim() !== "") {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.studentEmail.trim())) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["studentEmail"],
+            message: "Please enter a valid email address or leave blank",
+          });
+        }
+      }
+    }
+  });
 
 export type ComplaintSubmitInput = z.infer<typeof complaintSubmitSchema>;
 
@@ -113,7 +150,9 @@ export const trackSchema = z.object({
   ticketId: z
     .string()
     .regex(/^GRV-\d{4}-\d{4}$/, "Invalid Ticket ID format. Example: GRV-2026-0001"),
-  studentEmail: z.string().email("Please enter a valid email address"),
+  studentEmail: z
+    .string()
+    .min(3, "Please enter your email or Secret Tracking Key"),
 });
 
 export type TrackInput = z.infer<typeof trackSchema>;

@@ -33,6 +33,9 @@ export interface Complaint {
   repliedAt: string | null;
   ackDueDate: string;
   slaDueDate: string;
+  source?: string;
+  isAnonymous?: boolean;
+  trackingSecret?: string | null;
   createdAt: string;
   updatedAt: string;
   statusLogs?: StatusLogEntry[];

@@ -22,6 +22,7 @@ import {
   Mail,
   Phone,
   Calendar,
+  ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "@/components/ui/Toast";
@@ -93,10 +94,32 @@ export function ComplaintDetail({ complaint, userName }: ComplaintDetailProps) {
             <p className="text-sm text-gray-500 mt-1">{categoryLabel}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            {complaint.isAnonymous && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                🔒 Anonymous Complaint
+              </span>
+            )}
             <Badge status={complaint.status} />
             <SLABadge slaDueDate={complaint.slaDueDate} status={complaint.status} />
           </div>
         </div>
+
+        {/* Anonymous banner */}
+        {complaint.isAnonymous && (
+          <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mt-5 flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-purple-100 text-purple-700 flex-shrink-0 mt-0.5">
+              <ShieldAlert className="h-5 w-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-purple-900 flex items-center gap-2">
+                Anonymous Whistleblower Protection
+              </h4>
+              <p className="text-xs text-purple-700 mt-1 leading-relaxed">
+                This grievance was submitted anonymously. Personal contact details and roll numbers are strictly withheld to protect the student from retaliation. The student tracks progress and authority responses via a secure Secret Tracking Key.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Student info grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-5 border-t border-gray-100 text-sm">
@@ -104,18 +127,24 @@ export function ComplaintDetail({ complaint, userName }: ComplaintDetailProps) {
             <User className="h-4 w-4 text-gray-400 mt-0.5" />
             <div>
               <p className="text-gray-500 text-xs">Student</p>
-              <p className="font-medium text-gray-900">{complaint.studentName}</p>
-              <p className="text-gray-500 text-xs">{complaint.studentRoll}</p>
+              <p className="font-medium text-gray-900">
+                {complaint.isAnonymous ? "Anonymous Student" : complaint.studentName}
+              </p>
+              <p className="text-gray-500 text-xs">
+                {complaint.isAnonymous ? "Identity Protected" : complaint.studentRoll}
+              </p>
             </div>
           </div>
           <div className="flex items-start gap-2">
             <Mail className="h-4 w-4 text-gray-400 mt-0.5" />
             <div>
               <p className="text-gray-500 text-xs">Email</p>
-              <p className="font-medium text-gray-900 break-all">{complaint.studentEmail}</p>
+              <p className="font-medium text-gray-900 break-all">
+                {complaint.isAnonymous ? "[Concealed for Privacy]" : complaint.studentEmail}
+              </p>
             </div>
           </div>
-          {complaint.studentPhone && (
+          {!complaint.isAnonymous && complaint.studentPhone && (
             <div className="flex items-start gap-2">
               <Phone className="h-4 w-4 text-gray-400 mt-0.5" />
               <div>

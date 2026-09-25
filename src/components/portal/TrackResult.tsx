@@ -141,6 +141,11 @@ export function TrackResult({ complaint }: TrackResultProps) {
             <p className="text-gray-900 font-semibold text-sm sm:text-base leading-snug">{complaint.subject}</p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
+            {complaint.isAnonymous && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                🔒 Anonymous
+              </span>
+            )}
             <Badge status={complaint.status} />
             <SLABadge slaDueDate={complaint.slaDueDate} status={complaint.status} />
           </div>
@@ -163,7 +168,10 @@ export function TrackResult({ complaint }: TrackResultProps) {
             <div>
               <p className="text-gray-500">Student</p>
               <p className="font-semibold text-gray-900">
-                {complaint.studentName} ({complaint.studentRoll})
+                {complaint.isAnonymous ? "Anonymous Student" : complaint.studentName}
+                <span className="text-xs text-gray-500 ml-1 font-normal">
+                  {complaint.isAnonymous ? "(Identity Protected)" : `(${complaint.studentRoll})`}
+                </span>
               </p>
             </div>
           </div>

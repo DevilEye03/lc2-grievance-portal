@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
     const q = searchParams.get("q") || "";
     const status = searchParams.get("status") || "";
     const category = searchParams.get("category") || "";
+    const type = searchParams.get("type") || "";
 
     const where: Record<string, unknown> = {};
     if (q) {
@@ -25,10 +26,13 @@ export async function GET(request: NextRequest) {
         { ticketId: { contains: q } },
         { studentName: { contains: q } },
         { studentRoll: { contains: q } },
+        { subject: { contains: q } },
       ];
     }
     if (status) where.status = status;
     if (category) where.category = category;
+    if (type === "anonymous") where.isAnonymous = true;
+    if (type === "standard") where.isAnonymous = false;
 
     const complaints = await prisma.complaint.findMany({
       where,
@@ -38,6 +42,7 @@ export async function GET(request: NextRequest) {
 
     const headers = [
       "Ticket ID",
+      "Type",
       "Student Name",
       "Roll No",
       "Email",
@@ -67,10 +72,11 @@ export async function GET(request: NextRequest) {
 
       return [
         esc(c.ticketId),
-        esc(c.studentName),
-        esc(c.studentRoll),
-        esc(c.studentEmail),
-        esc(c.studentPhone),
+        esc(c.isAnonymous ? "ANONYMOUS" : "STANDARD"),
+        esc(c.isAnonymous ? "Anonymous Student" : c.studentName),
+        esc(c.isAnonymous ? "[PROTECTED]" : c.studentRoll),
+        esc(c.isAnonymous ? "[CONCEALED]" : c.studentEmail),
+        esc(c.isAnonymous ? "[CONCEALED]" : c.studentPhone),
         esc(catLabel),
         esc(c.subject),
         esc(stsLabel),

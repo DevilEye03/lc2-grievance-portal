@@ -18,10 +18,10 @@ async function fetchComplaint(
 ): Promise<{ complaint?: Complaint; error?: string }> {
   try {
     const cleanTicketId = ticketId.trim().toUpperCase();
-    const cleanEmail = email.trim().toLowerCase();
+    const cleanIdentifier = email.trim();
 
-    if (!cleanTicketId || !cleanEmail) {
-      return { error: "Both Ticket ID and registered email are required." };
+    if (!cleanTicketId || !cleanIdentifier) {
+      return { error: "Both Ticket ID and Registered Email or Secret Key are required." };
     }
 
     if (!/^GRV-\d{4}-\d{4}$/.test(cleanTicketId)) {
@@ -31,7 +31,10 @@ async function fetchComplaint(
     const complaint = await prisma.complaint.findFirst({
       where: {
         ticketId: cleanTicketId,
-        studentEmail: cleanEmail,
+        OR: [
+          { studentEmail: cleanIdentifier.toLowerCase() },
+          { trackingSecret: cleanIdentifier.toUpperCase() },
+        ],
       },
       include: {
         statusLogs: { orderBy: { createdAt: "asc" } },
@@ -41,7 +44,7 @@ async function fetchComplaint(
     if (!complaint) {
       return {
         error:
-          "No grievance found with this Ticket ID and email combination. Please check your details.",
+          "No grievance found with this Ticket ID and Email / Secret Key combination. Please check your details.",
       };
     }
 
@@ -49,10 +52,11 @@ async function fetchComplaint(
     const safe: Complaint = {
       id: complaint.id,
       ticketId: complaint.ticketId,
-      studentName: complaint.studentName,
-      studentRoll: complaint.studentRoll,
-      studentEmail: complaint.studentEmail,
-      studentPhone: complaint.studentPhone ? "***" : null,
+      isAnonymous: complaint.isAnonymous,
+      studentName: complaint.isAnonymous ? "Anonymous Student" : complaint.studentName,
+      studentRoll: complaint.isAnonymous ? "PROTECTED" : complaint.studentRoll,
+      studentEmail: complaint.isAnonymous ? "[Concealed for Privacy]" : complaint.studentEmail,
+      studentPhone: complaint.isAnonymous ? null : complaint.studentPhone ? "***" : null,
       category: complaint.category,
       subject: complaint.subject,
       description: complaint.description,

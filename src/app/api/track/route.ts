@@ -8,11 +8,11 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const ticketId = searchParams.get("ticketId")?.trim().toUpperCase();
-    const email = searchParams.get("email")?.trim().toLowerCase();
+    const identifier = searchParams.get("email")?.trim();
 
-    if (!ticketId || !email) {
+    if (!ticketId || !identifier) {
       return NextResponse.json(
-        { success: false, error: "Both ticketId and email are required." },
+        { success: false, error: "Both Ticket ID and Registered Email or Secret Key are required." },
         { status: 400 }
       );
     }
@@ -28,7 +28,10 @@ export async function GET(request: NextRequest) {
     const complaint = await prisma.complaint.findFirst({
       where: {
         ticketId,
-        studentEmail: email,
+        OR: [
+          { studentEmail: identifier.toLowerCase() },
+          { trackingSecret: identifier.toUpperCase() },
+        ],
       },
       include: {
         statusLogs: { orderBy: { createdAt: "asc" } },
@@ -40,7 +43,7 @@ export async function GET(request: NextRequest) {
         {
           success: false,
           error:
-            "No grievance found with this Ticket ID and email combination. Please check your details.",
+            "No grievance found with this Ticket ID and Email / Secret Key combination. Please check your details.",
         },
         { status: 404 }
       );
@@ -49,7 +52,11 @@ export async function GET(request: NextRequest) {
     // Mask sensitive fields
     const safe = {
       ...complaint,
-      studentPhone: complaint.studentPhone ? "***" : null,
+      studentName: complaint.isAnonymous ? "Anonymous Student" : complaint.studentName,
+      studentRoll: complaint.isAnonymous ? "PROTECTED" : complaint.studentRoll,
+      studentEmail: complaint.isAnonymous ? "[Concealed for Privacy]" : complaint.studentEmail,
+      studentPhone: complaint.isAnonymous ? null : complaint.studentPhone ? "***" : null,
+      trackingSecret: null, // do not reflect secret
     };
 
     return NextResponse.json({ success: true, data: safe });

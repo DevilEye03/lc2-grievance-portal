@@ -8,11 +8,12 @@ import { Textarea } from "@/components/ui/Textarea";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { CATEGORIES } from "@/lib/validations";
-import { CheckCircle, Copy, Search, Upload, X, ChevronRight, ChevronLeft } from "lucide-react";
+import { CheckCircle, Copy, Search, Upload, X, ChevronRight, ChevronLeft, Shield, ShieldCheck, ShieldAlert, Lock } from "lucide-react";
 
 const STEPS = ["Personal Info", "Category & Subject", "Description", "Review & Submit"];
 
 interface FormData {
+  isAnonymous: boolean;
   studentName: string;
   studentRoll: string;
   studentEmail: string;
@@ -28,6 +29,7 @@ interface Errors {
 }
 
 const initialForm: FormData = {
+  isAnonymous: false,
   studentName: "",
   studentRoll: "",
   studentEmail: "",
@@ -47,7 +49,10 @@ export function GrievanceForm() {
   const [uploadingFile, setUploadingFile] = useState(false);
   const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null);
   const [successTicket, setSuccessTicket] = useState<string | null>(null);
+  const [successSecret, setSuccessSecret] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copiedSecret, setCopiedSecret] = useState(false);
+  const [copiedAll, setCopiedAll] = useState(false);
 
   function set(field: keyof FormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -57,13 +62,21 @@ export function GrievanceForm() {
   function validateStep(s: number): boolean {
     const errs: Errors = {};
     if (s === 0) {
-      if (!form.studentName.trim() || form.studentName.length < 2)
-        errs.studentName = "Name must be at least 2 characters";
-      if (!form.studentRoll.trim()) errs.studentRoll = "Roll number is required";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.studentEmail))
-        errs.studentEmail = "Enter a valid email address";
-      if (form.studentPhone && !/^[6-9]\d{9}$/.test(form.studentPhone))
-        errs.studentPhone = "Enter a valid 10-digit mobile number";
+      if (!form.isAnonymous) {
+        if (!form.studentName.trim() || form.studentName.length < 2)
+          errs.studentName = "Name must be at least 2 characters";
+        if (!form.studentRoll.trim()) errs.studentRoll = "Roll number is required";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.studentEmail))
+          errs.studentEmail = "Enter a valid email address";
+        if (form.studentPhone && !/^[6-9]\d{9}$/.test(form.studentPhone))
+          errs.studentPhone = "Enter a valid 10-digit mobile number";
+      } else {
+        if (form.studentEmail && form.studentEmail.trim()) {
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.studentEmail.trim())) {
+            errs.studentEmail = "Enter a valid email address or leave blank";
+          }
+        }
+      }
     }
     if (s === 1) {
       if (!form.category) errs.category = "Please select a category";
@@ -126,10 +139,11 @@ export function GrievanceForm() {
     setSubmitting(true);
     try {
       const payload = {
-        studentName: form.studentName,
-        studentRoll: form.studentRoll,
-        studentEmail: form.studentEmail,
-        studentPhone: form.studentPhone || undefined,
+        isAnonymous: form.isAnonymous,
+        studentName: form.isAnonymous ? "Anonymous Student" : form.studentName,
+        studentRoll: form.isAnonymous ? "ANONYMOUS" : form.studentRoll,
+        studentEmail: form.studentEmail || undefined,
+        studentPhone: form.isAnonymous ? undefined : form.studentPhone || undefined,
         category: form.category,
         subject: form.subject,
         description: form.description,
@@ -145,6 +159,7 @@ export function GrievanceForm() {
       const data = await res.json();
       if (data.success) {
         setSuccessTicket(data.data.ticketId);
+        setSuccessSecret(data.data.trackingSecret || null);
       } else {
         setErrors({ submit: data.error || "Submission failed. Please try again." });
       }
@@ -168,13 +183,23 @@ export function GrievanceForm() {
     return (
       <Card className="text-center max-w-lg mx-auto p-4 sm:p-8">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-            <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-emerald-600" />
+          <div className={`h-14 w-14 sm:h-16 sm:w-16 rounded-full flex items-center justify-center flex-shrink-0 ${
+            successSecret ? "bg-purple-100 text-purple-600" : "bg-emerald-100 text-emerald-600"
+          }`}>
+            {successSecret ? (
+              <ShieldCheck className="h-7 w-7 sm:h-8 sm:w-8" />
+            ) : (
+              <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8" />
+            )}
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Grievance Submitted!</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+              {successSecret ? "Anonymous Grievance Registered!" : "Grievance Submitted!"}
+            </h2>
             <p className="text-xs sm:text-sm text-gray-500 mt-1">
-              Your complaint has been successfully registered. Please save your Ticket ID below.
+              {successSecret
+                ? "Your identity is protected. Please copy and save your Secret Tracking Key below."
+                : "Your complaint has been successfully registered. Please save your Ticket ID below."}
             </p>
           </div>
 
@@ -187,29 +212,87 @@ export function GrievanceForm() {
             </p>
           </div>
 
+          {successSecret && (
+            <div className="bg-purple-50 border-2 border-purple-200 rounded-xl px-4 py-3 sm:px-6 sm:py-4 w-full text-left space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-[10px] sm:text-xs text-purple-700 font-semibold uppercase tracking-wider">
+                      Secret Tracking Key
+                    </p>
+                    <span className="text-[9px] bg-purple-200 text-purple-900 px-1.5 py-0.5 rounded font-bold uppercase">
+                      Required to Track
+                    </span>
+                  </div>
+                  <p className="text-lg sm:text-2xl font-black text-purple-900 tracking-wider font-mono mt-0.5">
+                    {successSecret}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs border-purple-300 text-purple-800 hover:bg-purple-100"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(successSecret);
+                    setCopiedSecret(true);
+                    setTimeout(() => setCopiedSecret(false), 2000);
+                  }}
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  {copiedSecret ? "Copied" : "Copy Key"}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {successSecret && (
+            <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 sm:p-4 text-left flex items-start gap-2.5">
+              <ShieldAlert className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="text-xs text-amber-900 leading-relaxed">
+                <p className="font-bold mb-0.5">Save this Secret Tracking Key now!</p>
+                <p>
+                  Because this grievance was filed anonymously, authorities do not have your name or student profile. You will need your <strong>Ticket ID</strong> and this <strong>Secret Tracking Key</strong> to view replies at <code>/track</code>.
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row gap-3 w-full">
             <Button
               variant="outline"
               className="flex-1 justify-center py-2.5"
-              onClick={copyTicket}
+              onClick={async () => {
+                const text = successSecret
+                  ? `LAW CENTRE II Grievance Tracking Credentials:\nTicket ID: ${successTicket}\nSecret Key: ${successSecret}\nTrack URL: https://lc2-grievance-portal.vercel.app/track`
+                  : `LAW CENTRE II Grievance Ticket: ${successTicket}`;
+                await navigator.clipboard.writeText(text);
+                setCopiedAll(true);
+                setTimeout(() => setCopiedAll(false), 2000);
+              }}
             >
               <Copy className="h-4 w-4" />
-              {copied ? "Copied!" : "Copy Ticket ID"}
+              {copiedAll ? "All Details Copied!" : successSecret ? "Copy All Credentials" : copied ? "Copied!" : "Copy Ticket ID"}
             </Button>
             <Button
-              className="flex-1 justify-center py-2.5"
+              className="flex-1 justify-center py-2.5 bg-brand-600 hover:bg-brand-700"
               onClick={() =>
-                router.push(`/track?ticketId=${successTicket}&email=${encodeURIComponent(form.studentEmail)}`)
+                router.push(
+                  `/track?ticketId=${successTicket}&email=${encodeURIComponent(
+                    successSecret || form.studentEmail || ""
+                  )}`
+                )
               }
             >
               <Search className="h-4 w-4" />
-              Track Status
+              Track Status Now
             </Button>
           </div>
 
-          <p className="text-xs text-gray-500">
-            A confirmation email has been dispatched to <strong>{form.studentEmail}</strong>
-          </p>
+          {form.studentEmail && !form.studentEmail.endsWith("@grievance.internal") && (
+            <p className="text-xs text-gray-500">
+              A confirmation email has been dispatched to <strong>{form.studentEmail}</strong>
+            </p>
+          )}
         </div>
       </Card>
     );
@@ -270,44 +353,162 @@ export function GrievanceForm() {
       {/* ─── Step 0: Personal Info ─── */}
       {step === 0 && (
         <div className="space-y-4">
-          <h2 className="text-base sm:text-lg font-semibold text-gray-900">Personal Information</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Student Full Name"
-              placeholder="e.g. Arjun Mehta"
-              value={form.studentName}
-              onChange={(e) => set("studentName", e.target.value)}
-              error={errors.studentName}
-              required
-            />
-            <Input
-              label="Roll / Registration Number"
-              placeholder="e.g. CS2023001"
-              value={form.studentRoll}
-              onChange={(e) => set("studentRoll", e.target.value)}
-              error={errors.studentRoll}
-              required
-            />
+          <div className="flex items-center justify-between">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">
+              {form.isAnonymous ? "Identity & Privacy" : "Personal Information"}
+            </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Student Email Address"
-              type="email"
-              placeholder="you@student.edu"
-              value={form.studentEmail}
-              onChange={(e) => set("studentEmail", e.target.value)}
-              error={errors.studentEmail}
-              required
-            />
-            <Input
-              label="Contact Phone (Optional)"
-              type="tel"
-              placeholder="10-digit mobile number"
-              value={form.studentPhone}
-              onChange={(e) => set("studentPhone", e.target.value)}
-              error={errors.studentPhone}
-            />
+
+          {/* Anonymous toggle card */}
+          <div
+            className={`p-4 rounded-xl border transition-all cursor-pointer ${
+              form.isAnonymous
+                ? "bg-purple-50/80 border-purple-300 ring-2 ring-purple-100"
+                : "bg-gray-50 border-gray-200 hover:border-gray-300"
+            }`}
+            onClick={() => {
+              const nextVal = !form.isAnonymous;
+              setForm((prev) => ({
+                ...prev,
+                isAnonymous: nextVal,
+                studentName: nextVal ? "Anonymous Student" : "",
+                studentRoll: nextVal ? "ANONYMOUS" : "",
+                studentPhone: nextVal ? "" : prev.studentPhone,
+              }));
+              setErrors({});
+            }}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div
+                  className={`p-2 rounded-lg mt-0.5 ${
+                    form.isAnonymous ? "bg-purple-100 text-purple-700" : "bg-gray-200 text-gray-600"
+                  }`}
+                >
+                  <Shield className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-gray-900">
+                      File Anonymously
+                    </span>
+                    {form.isAnonymous ? (
+                      <span className="text-[10px] bg-purple-200 text-purple-800 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                        Protected
+                      </span>
+                    ) : (
+                      <span className="text-[10px] bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full font-medium">
+                        Optional
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">
+                    {form.isAnonymous
+                      ? "Whistleblower mode enabled. Your name, roll number, and phone number will NOT be recorded or shown to officers. You will receive a Secret Tracking Key to track replies."
+                      : "Check this if you do not want your name, roll number, or phone number disclosed to the administration."}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center pt-1" onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="checkbox"
+                  id="anonymous-toggle"
+                  checked={form.isAnonymous}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setForm((prev) => ({
+                      ...prev,
+                      isAnonymous: checked,
+                      studentName: checked ? "Anonymous Student" : "",
+                      studentRoll: checked ? "ANONYMOUS" : "",
+                      studentPhone: checked ? "" : prev.studentPhone,
+                    }));
+                    setErrors({});
+                  }}
+                  className="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500 cursor-pointer"
+                />
+              </div>
+            </div>
           </div>
+
+          {form.isAnonymous ? (
+            <div className="space-y-4 pt-1">
+              <div className="bg-purple-50/60 border border-purple-200 rounded-xl p-4 space-y-3">
+                <div className="flex items-center gap-2 text-purple-900 font-semibold text-xs uppercase tracking-wider">
+                  <Lock className="h-3.5 w-3.5 text-purple-600" />
+                  <span>Your Identity Protection Shield</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                  <div className="bg-white p-2.5 rounded-lg border border-purple-100">
+                    <p className="text-gray-400 text-[11px]">Display Name</p>
+                    <p className="font-semibold text-gray-800 mt-0.5">Anonymous Student</p>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-lg border border-purple-100">
+                    <p className="text-gray-400 text-[11px]">Roll Number</p>
+                    <p className="font-semibold text-gray-800 mt-0.5">PROTECTED (N/A)</p>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-lg border border-purple-100">
+                    <p className="text-gray-400 text-[11px]">Contact Phone</p>
+                    <p className="font-semibold text-gray-800 mt-0.5">Withheld</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Input
+                  label="Private Notification Email (Optional)"
+                  type="email"
+                  placeholder="Optional — e.g. you@student.edu"
+                  value={form.studentEmail}
+                  onChange={(e) => set("studentEmail", e.target.value)}
+                  error={errors.studentEmail}
+                />
+                <p className="text-[11px] text-gray-500 mt-1.5 leading-relaxed">
+                  🔒 <strong>Strict Privacy Guarantee:</strong> If entered, this email is only used by the automated system to alert you when an authority reply is posted. It will <strong>never</strong> be visible to officers or attached to your complaint. You can also leave this blank and track status purely using your Secret Tracking Key.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Input
+                  label="Student Full Name"
+                  placeholder="e.g. Arjun Mehta"
+                  value={form.studentName}
+                  onChange={(e) => set("studentName", e.target.value)}
+                  error={errors.studentName}
+                  required
+                />
+                <Input
+                  label="Roll / Registration Number"
+                  placeholder="e.g. CS2023001"
+                  value={form.studentRoll}
+                  onChange={(e) => set("studentRoll", e.target.value)}
+                  error={errors.studentRoll}
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Input
+                  label="Student Email Address"
+                  type="email"
+                  placeholder="you@student.edu"
+                  value={form.studentEmail}
+                  onChange={(e) => set("studentEmail", e.target.value)}
+                  error={errors.studentEmail}
+                  required
+                />
+                <Input
+                  label="Contact Phone (Optional)"
+                  type="tel"
+                  placeholder="10-digit mobile number"
+                  value={form.studentPhone}
+                  onChange={(e) => set("studentPhone", e.target.value)}
+                  error={errors.studentPhone}
+                />
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -411,23 +612,48 @@ export function GrievanceForm() {
       {step === 3 && (
         <div className="space-y-4">
           <h2 className="text-base sm:text-lg font-semibold text-gray-900">Review & Submit</h2>
+
+          {form.isAnonymous && (
+            <div className="bg-purple-50 border border-purple-200 rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-purple-900">
+              <ShieldCheck className="h-4 w-4 text-purple-700 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-bold">Filing as Anonymous Grievance</p>
+                <p className="text-purple-700 mt-0.5">
+                  Your identity details will be masked and not shared with administration. You will be given a Secret Tracking Key upon submitting.
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="bg-gray-50 rounded-xl p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-3 border-b border-gray-200">
               <div>
                 <p className="text-gray-500">Student Name</p>
-                <p className="font-semibold text-gray-900">{form.studentName}</p>
+                <p className="font-semibold text-gray-900">
+                  {form.isAnonymous ? "Anonymous Student (Protected)" : form.studentName}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500">Roll / Reg Number</p>
-                <p className="font-semibold text-gray-900">{form.studentRoll}</p>
+                <p className="font-semibold text-gray-900">
+                  {form.isAnonymous ? "PROTECTED (N/A)" : form.studentRoll}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500">Email Address</p>
-                <p className="font-semibold text-gray-900 break-all">{form.studentEmail}</p>
+                <p className="font-semibold text-gray-900 break-all">
+                  {form.isAnonymous
+                    ? form.studentEmail
+                      ? `${form.studentEmail} (Private Alerts Only)`
+                      : "None Provided"
+                    : form.studentEmail}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500">Phone</p>
-                <p className="font-semibold text-gray-900">{form.studentPhone || "—"}</p>
+                <p className="font-semibold text-gray-900">
+                  {form.isAnonymous ? "Withheld" : form.studentPhone || "—"}
+                </p>
               </div>
               <div>
                 <p className="text-gray-500">Category</p>

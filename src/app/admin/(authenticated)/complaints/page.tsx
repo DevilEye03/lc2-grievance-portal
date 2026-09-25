@@ -14,6 +14,7 @@ interface PageProps {
     q?: string;
     status?: string;
     category?: string;
+    type?: string;
   }>;
 }
 
@@ -27,6 +28,7 @@ export default async function ComplaintsPage({ searchParams }: PageProps) {
   const q = params.q || "";
   const status = params.status || "";
   const category = params.category || "";
+  const type = params.type || "";
 
   const where: Record<string, unknown> = {};
   if (q) {
@@ -34,10 +36,13 @@ export default async function ComplaintsPage({ searchParams }: PageProps) {
       { ticketId: { contains: q } },
       { studentName: { contains: q } },
       { studentRoll: { contains: q } },
+      { subject: { contains: q } },
     ];
   }
   if (status) where.status = status;
   if (category) where.category = category;
+  if (type === "anonymous") where.isAnonymous = true;
+  if (type === "standard") where.isAnonymous = false;
 
   const [complaints, total] = await Promise.all([
     prisma.complaint.findMany({

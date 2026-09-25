@@ -105,6 +105,17 @@ export function ComplaintsTable({ complaints, total, page, totalPages }: Complai
             onChange={(e) => handleFilter("category", e.target.value)}
             className="w-full sm:w-44 py-2 text-xs sm:text-sm"
           />
+
+          <Select
+            options={[
+              { value: "", label: "All Types" },
+              { value: "standard", label: "Standard" },
+              { value: "anonymous", label: "Anonymous 🔒" },
+            ]}
+            value={searchParams.get("type") || ""}
+            onChange={(e) => handleFilter("type", e.target.value)}
+            className="w-full sm:w-36 py-2 text-xs sm:text-sm"
+          />
         </div>
 
         <Button
@@ -141,9 +152,16 @@ export function ComplaintsTable({ complaints, total, page, totalPages }: Complai
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="font-mono text-xs font-bold text-brand-700">
-                      {c.ticketId}
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-mono text-xs font-bold text-brand-700">
+                        {c.ticketId}
+                      </span>
+                      {c.isAnonymous && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                          🔒 Anonymous
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-gray-500 font-medium mt-0.5">{formatDate(c.createdAt)}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
@@ -155,8 +173,12 @@ export function ComplaintsTable({ complaints, total, page, totalPages }: Complai
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold text-gray-900 line-clamp-1">{c.studentName}</p>
-                  <p className="text-xs text-gray-500">{c.studentRoll}</p>
+                  <p className="text-sm font-semibold text-gray-900 line-clamp-1">
+                    {c.isAnonymous ? "Anonymous Student" : c.studentName}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {c.isAnonymous ? "Identity Protected" : c.studentRoll}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-1.5 text-xs text-gray-600 bg-gray-50 p-2 rounded-lg">
@@ -218,15 +240,24 @@ export function ComplaintsTable({ complaints, total, page, totalPages }: Complai
                       )}
                     >
                       <td className="px-4 py-3">
-                        <span className="font-mono text-xs font-semibold text-brand-700">
-                          {c.ticketId}
-                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono text-xs font-semibold text-brand-700">
+                            {c.ticketId}
+                          </span>
+                          {c.isAnonymous && (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 border border-purple-200">
+                              🔒 Anon
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <p className="font-medium text-gray-900 truncate max-w-[160px]">
-                          {c.studentName}
+                          {c.isAnonymous ? "Anonymous Student" : c.studentName}
                         </p>
-                        <p className="text-xs text-gray-500">{c.studentRoll}</p>
+                        <p className="text-xs text-gray-500">
+                          {c.isAnonymous ? "Identity Protected" : c.studentRoll}
+                        </p>
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell">
                         <span className="text-xs text-gray-600">
