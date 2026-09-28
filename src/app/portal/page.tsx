@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CampusBackground } from "@/components/layout/CampusBackground";
 import Link from "next/link";
 import { FileText, Search, Clock, ShieldCheck, ArrowRight, Lock } from "lucide-react";
 
@@ -8,22 +9,23 @@ export const metadata: Metadata = { title: "Home" };
 
 export default function PortalLandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col relative">
+      <CampusBackground />
       <Navbar />
 
       <main className="flex-1 flex flex-col justify-center py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
         {/* Minimal Hero Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-700 rounded-full px-3.5 py-1 text-xs font-semibold mb-3">
+          <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-brand-200 text-brand-700 rounded-full px-3.5 py-1 text-xs font-semibold mb-3 shadow-xs">
             <span>Official Student Grievance Redressal Platform</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-xs">
             Law Centre II <span className="text-brand-600">Student Union</span>
             <span className="block text-xl sm:text-3xl font-bold text-gray-800 mt-1">
               Grievance Redressal Portal
             </span>
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-gray-600 max-w-xl mx-auto">
+          <p className="mt-2 text-sm sm:text-base text-gray-700 max-w-xl mx-auto font-medium">
             Official student union platform for transparent and time-bound grievance resolution. Submit complaints, file anonymous whistleblower reports, and track outcomes.
           </p>
         </div>
@@ -33,7 +35,7 @@ export default function PortalLandingPage() {
           {/* Submit Card */}
           <Link
             href="/submit"
-            className="group relative bg-white border border-gray-200 rounded-2xl p-6 sm:p-7 shadow-sm hover:shadow-md hover:border-brand-500 transition-all flex flex-col justify-between"
+            className="group relative bg-white/92 backdrop-blur-md border border-white/80 rounded-2xl p-6 sm:p-7 shadow-md hover:shadow-xl hover:border-brand-500 hover:bg-white transition-all flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -60,7 +62,7 @@ export default function PortalLandingPage() {
           {/* Track Card */}
           <Link
             href="/track"
-            className="group relative bg-white border border-gray-200 rounded-2xl p-6 sm:p-7 shadow-sm hover:shadow-md hover:border-brand-500 transition-all flex flex-col justify-between"
+            className="group relative bg-white/92 backdrop-blur-md border border-white/80 rounded-2xl p-6 sm:p-7 shadow-md hover:shadow-xl hover:border-brand-500 hover:bg-white transition-all flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -86,7 +88,7 @@ export default function PortalLandingPage() {
         </div>
 
         {/* Minimal SLA Trust Strip */}
-        <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs">
+        <div className="bg-white/92 backdrop-blur-md border border-white/80 rounded-xl p-4 sm:p-5 shadow-sm">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center sm:text-left divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
             <div className="flex items-center justify-center sm:justify-start gap-3 sm:pr-4 pt-2 sm:pt-0">
               <div className="p-2 rounded-lg bg-amber-50 text-amber-600">

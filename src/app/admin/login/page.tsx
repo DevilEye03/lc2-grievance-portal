@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { Scale, Eye, EyeOff } from "lucide-react";
+import { CampusBackground } from "@/components/layout/CampusBackground";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -44,7 +45,8 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-950 flex items-center justify-center p-3.5 sm:p-6">
+    <div className="min-h-screen relative flex items-center justify-center p-3.5 sm:p-6 overflow-hidden">
+      <CampusBackground variant="dark" />
       <div className="w-full max-w-sm">
         {/* Brand */}
         <div className="text-center mb-6 sm:mb-8">

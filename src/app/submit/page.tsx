@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CampusBackground } from "@/components/layout/CampusBackground";
 import { GrievanceForm } from "@/components/portal/GrievanceForm";
 
 export const metadata: Metadata = { title: "Submit Grievance" };
 
 export default function SubmitPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col relative">
+      <CampusBackground />
       <Navbar />
       <main className="flex-1 py-6 sm:py-10 px-3.5 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">

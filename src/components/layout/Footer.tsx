@@ -3,7 +3,7 @@ import { Lock } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-white py-6 mt-auto">
+    <footer className="border-t border-gray-200/80 bg-white/90 backdrop-blur-md py-6 mt-auto">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
         <p>© {new Date().getFullYear()} Law Centre II Student Union. All rights reserved.</p>
         <div className="flex items-center gap-3.5 sm:gap-4">

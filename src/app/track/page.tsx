@@ -7,6 +7,7 @@ import { TrackResult } from "@/components/portal/TrackResult";
 import { Card } from "@/components/ui/Card";
 import { PageSpinner } from "@/components/ui/Spinner";
 import { Search, AlertCircle } from "lucide-react";
+import { CampusBackground } from "@/components/layout/CampusBackground";
 import type { Complaint } from "@/types";
 
 import { prisma } from "@/lib/prisma";
@@ -121,7 +122,8 @@ export default async function TrackPage({ searchParams }: TrackPageProps) {
   const hasSearch = ticketId && email;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col relative">
+      <CampusBackground />
       <Navbar />
       <main className="flex-1 py-6 sm:py-10 px-3.5 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
