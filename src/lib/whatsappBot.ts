@@ -257,15 +257,15 @@ export async function processIncomingWhatsAppMessage({
 
       const next =
         `Category: *${matchedCat.title}* ✅\n\n` +
-        `Please enter a brief *Subject Line* for your grievance (maximum 120 characters, e.g. 'Attendance shortage calculation in Criminal Law'):`;
+        `Please enter a brief *Grievance Title* (maximum 120 characters, e.g. 'Attendance shortage calculation in Criminal Law'):`;
       await sendWhatsAppText(cleanPhone, next);
       return next;
     }
 
-    // ─── Step 5: Subject Line ───────────────────────────────────────────────
+    // ─── Step 5: Grievance Title ────────────────────────────────────────────
     case "SUBMIT_SUBJECT": {
       if (input.length < 5 || input.length > 120) {
-        const err = `⚠️ Subject line must be between 5 and 120 characters. Please re-enter:`;
+        const err = `⚠️ Grievance title must be between 5 and 120 characters. Please re-enter:`;
         await sendWhatsAppText(cleanPhone, err);
         return err;
       }
@@ -281,7 +281,7 @@ export async function processIncomingWhatsAppMessage({
       });
 
       const next =
-        `Subject saved.\n\n` +
+        `Title recorded.\n\n` +
         `Now please enter the *Detailed Description* of your grievance (minimum 30 characters explaining what happened, dates, or relevant details):`;
       await sendWhatsAppText(cleanPhone, next);
       return next;

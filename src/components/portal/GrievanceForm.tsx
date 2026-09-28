@@ -94,9 +94,9 @@ export function GrievanceForm() {
       errs.category = "Please select a category";
     }
     if (!form.subject.trim() || form.subject.length < 5) {
-      errs.subject = "Subject must be at least 5 characters";
+      errs.subject = "Grievance title must be at least 5 characters";
     } else if (form.subject.length > 120) {
-      errs.subject = "Subject must be under 120 characters";
+      errs.subject = "Grievance title must be under 120 characters";
     }
     if (!form.description.trim() || form.description.length < 30) {
       errs.description = "Description must be at least 30 characters";
@@ -409,8 +409,8 @@ export function GrievanceForm() {
               required
             />
             <Input
-              label="Subject Line"
-              placeholder="Brief summary (max 120 chars)"
+              label="Grievance Title"
+              placeholder="Brief summary of your grievance (max 120 chars)"
               value={form.subject}
               onChange={(e) => set("subject", e.target.value)}
               error={errors.subject}

@@ -46,7 +46,10 @@ export const complaintSubmitSchema = z
       "DISCIPLINARY",
       "OTHER",
     ]),
-    subject: z.string().min(5, "Subject is too short").max(120, "Subject must be under 120 characters"),
+    subject: z
+      .string()
+      .min(5, "Grievance title must be at least 5 characters")
+      .max(120, "Grievance title must be under 120 characters"),
     description: z
       .string()
       .min(30, "Description must be at least 30 characters")
