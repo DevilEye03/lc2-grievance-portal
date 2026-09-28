@@ -22,20 +22,23 @@ export function CampusBackground({ variant = "light", blur = true }: CampusBackg
       {/* Atmospheric Overlays */}
       {variant === "light" ? (
         <>
-          {/* Subtle contrast stabilizer */}
-          <div className="absolute inset-0 bg-slate-900/10" />
-          {/* Institutional bright scrim to ensure complete legibility of text and cards */}
+          {/* Institutional light wash to brighten shadows and keep contrast crisp */}
           <div
-            className={`absolute inset-0 bg-gradient-to-b from-white/72 via-white/75 to-slate-50/88 ${
-              blur ? "backdrop-blur-[1.5px]" : ""
-            }`}
+            className="absolute inset-0 backdrop-blur-[1.5px]"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.72) 40%, rgba(248,250,252,0.90) 100%)",
+            }}
           />
         </>
       ) : (
-        <>
-          {/* Midnight overlay for admin login */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-brand-950/90 to-slate-950/95 backdrop-blur-[2px]" />
-        </>
+        <div
+          className="absolute inset-0 backdrop-blur-sm"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(15,23,42,0.88) 0%, rgba(30,27,75,0.92) 50%, rgba(15,23,42,0.95) 100%)",
+          }}
+        />
       )}
     </div>
   );

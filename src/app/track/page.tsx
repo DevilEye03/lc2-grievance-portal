@@ -127,9 +127,9 @@ export default async function TrackPage({ searchParams }: TrackPageProps) {
       <Navbar />
       <main className="flex-1 py-6 sm:py-10 px-3.5 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-6">
+          <div className="text-center mb-6 bg-white/90 backdrop-blur-md rounded-2xl p-5 border border-white/90 shadow-sm">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Track Grievance</h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+            <p className="text-xs sm:text-sm text-gray-600 mt-1">
               Enter your Ticket ID with your registered email or Secret Tracking Key.
             </p>
           </div>

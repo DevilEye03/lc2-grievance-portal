@@ -14,18 +14,18 @@ export default function PortalLandingPage() {
       <Navbar />
 
       <main className="flex-1 flex flex-col justify-center py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
-        {/* Minimal Hero Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-brand-200 text-brand-700 rounded-full px-3.5 py-1 text-xs font-semibold mb-3 shadow-xs">
+        {/* Minimal Hero Header Container */}
+        <div className="text-center mb-8 sm:mb-12 bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-6 sm:p-9 border border-white/90 shadow-md max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-700 rounded-full px-3.5 py-1 text-xs font-semibold mb-3 shadow-xs">
             <span>Official Student Grievance Redressal Platform</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-xs">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
             Law Centre II <span className="text-brand-600">Student Union</span>
             <span className="block text-xl sm:text-3xl font-bold text-gray-800 mt-1">
               Grievance Redressal Portal
             </span>
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-gray-700 max-w-xl mx-auto font-medium">
+          <p className="mt-3 text-sm sm:text-base text-gray-600 max-w-xl mx-auto font-normal leading-relaxed">
             Official student union platform for transparent and time-bound grievance resolution. Submit complaints, file anonymous whistleblower reports, and track outcomes.
           </p>
         </div>
@@ -35,7 +35,7 @@ export default function PortalLandingPage() {
           {/* Submit Card */}
           <Link
             href="/submit"
-            className="group relative bg-white/92 backdrop-blur-md border border-white/80 rounded-2xl p-6 sm:p-7 shadow-md hover:shadow-xl hover:border-brand-500 hover:bg-white transition-all flex flex-col justify-between"
+            className="group relative bg-white/95 backdrop-blur-md border border-gray-200/90 rounded-2xl p-6 sm:p-7 shadow-md hover:shadow-xl hover:border-brand-500 hover:bg-white transition-all flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -49,7 +49,7 @@ export default function PortalLandingPage() {
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
                 Submit a Grievance
               </h2>
-              <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+              <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">
                 File a grievance regarding academic, infrastructure, or administrative issues. You can also file 100% anonymously with a Secret Key.
               </p>
             </div>
@@ -62,7 +62,7 @@ export default function PortalLandingPage() {
           {/* Track Card */}
           <Link
             href="/track"
-            className="group relative bg-white/92 backdrop-blur-md border border-white/80 rounded-2xl p-6 sm:p-7 shadow-md hover:shadow-xl hover:border-brand-500 hover:bg-white transition-all flex flex-col justify-between"
+            className="group relative bg-white/95 backdrop-blur-md border border-gray-200/90 rounded-2xl p-6 sm:p-7 shadow-md hover:shadow-xl hover:border-brand-500 hover:bg-white transition-all flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -76,7 +76,7 @@ export default function PortalLandingPage() {
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
                 Track Grievance Status
               </h2>
-              <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+              <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">
                 Check live progress, stage timeline, and read official authority replies using your Ticket ID and Registered Email or Secret Key.
               </p>
             </div>
@@ -88,7 +88,7 @@ export default function PortalLandingPage() {
         </div>
 
         {/* Minimal SLA Trust Strip */}
-        <div className="bg-white/92 backdrop-blur-md border border-white/80 rounded-xl p-4 sm:p-5 shadow-sm">
+        <div className="bg-white/95 backdrop-blur-md border border-gray-200/90 rounded-xl p-4 sm:p-5 shadow-sm">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center sm:text-left divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
             <div className="flex items-center justify-center sm:justify-start gap-3 sm:pr-4 pt-2 sm:pt-0">
               <div className="p-2 rounded-lg bg-amber-50 text-amber-600">
@@ -96,7 +96,7 @@ export default function PortalLandingPage() {
               </div>
               <div>
                 <p className="text-xs font-semibold text-gray-900">48h Acknowledgment</p>
-                <p className="text-[11px] text-gray-500">Official receipt guaranteed</p>
+                <p className="text-[11px] text-gray-600">Official receipt guaranteed</p>
               </div>
             </div>
 
@@ -106,7 +106,7 @@ export default function PortalLandingPage() {
               </div>
               <div>
                 <p className="text-xs font-semibold text-gray-900">7-Day Resolution</p>
-                <p className="text-[11px] text-gray-500">Standard grievance timeline</p>
+                <p className="text-[11px] text-gray-600">Standard grievance timeline</p>
               </div>
             </div>
 
