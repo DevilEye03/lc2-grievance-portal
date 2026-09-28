@@ -11,13 +11,12 @@ import {
 // Category definitions matching the web portal
 export const WA_CATEGORIES = [
   { id: "ACADEMIC", number: "1", title: "Academic & Curriculum" },
-  { id: "HOSTEL_MESS", number: "2", title: "Hostel & Mess" },
-  { id: "EXAMINATION", number: "3", title: "Examination & Marks" },
-  { id: "INFRASTRUCTURE_MAINTENANCE", number: "4", title: "Infrastructure & Maintenance" },
-  { id: "FEES_SCHOLARSHIP", number: "5", title: "Fees & Scholarships" },
-  { id: "ANTI_RAGGING", number: "6", title: "Anti-Ragging Cell" },
-  { id: "DISCIPLINARY", number: "7", title: "Disciplinary Matters" },
-  { id: "OTHER", number: "8", title: "Other Inquiries" },
+  { id: "EXAMINATION", number: "2", title: "Examination & Marks" },
+  { id: "INFRASTRUCTURE_MAINTENANCE", number: "3", title: "Infrastructure & Maintenance" },
+  { id: "FEES_SCHOLARSHIP", number: "4", title: "Fees & Scholarships" },
+  { id: "ANTI_RAGGING", number: "5", title: "Anti-Ragging Cell" },
+  { id: "DISCIPLINARY", number: "6", title: "Disciplinary Matters" },
+  { id: "OTHER", number: "7", title: "Other Inquiries" },
 ] as const;
 
 interface TempFormData {
@@ -222,7 +221,7 @@ export async function processIncomingWhatsAppMessage({
       for (const c of WA_CATEGORIES) {
         catMenu += `*${c.number}.* ${c.title}\n`;
       }
-      catMenu += `\nReply with the category number (*1 - 8*):`;
+      catMenu += `\nReply with the category number (*1 - 7*):`;
 
       await sendWhatsAppText(cleanPhone, catMenu);
       return catMenu;
@@ -239,9 +238,9 @@ export async function processIncomingWhatsAppMessage({
 
       if (!matchedCat) {
         const err =
-          `⚠️ Invalid choice. Please reply with a number from *1 to 8* matching your category:\n` +
-          `1. Academic  2. Hostel/Mess  3. Exam  4. Infrastructure\n` +
-          `5. Fees/Scholarship  6. Anti-Ragging  7. Disciplinary  8. Other`;
+          `⚠️ Invalid choice. Please reply with a number from *1 to 7* matching your category:\n` +
+          `1. Academic  2. Exam  3. Infrastructure  4. Fees/Scholarship\n` +
+          `5. Anti-Ragging  6. Disciplinary  7. Other`;
         await sendWhatsAppText(cleanPhone, err);
         return err;
       }
@@ -510,7 +509,7 @@ async function sendFAQ(phone: string): Promise<string> {
     `*Q3: Will I be notified when action is taken?*\n` +
     `Yes! The system automatically dispatches WhatsApp messages and emails whenever the authority acknowledges, comments, or posts an official resolution.\n\n` +
     `*Q4: What categories can I report under?*\n` +
-    `Academic, Hostel/Mess, Examination, Infrastructure, Fees/Scholarships, Anti-Ragging, and Disciplinary matters.\n\n` +
+    `Academic, Examination, Infrastructure, Fees/Scholarships, Anti-Ragging, and Disciplinary matters.\n\n` +
     `_Reply *1* to submit a grievance, or *menu* to return._`;
 
   await sendWhatsAppText(phone, faqText);

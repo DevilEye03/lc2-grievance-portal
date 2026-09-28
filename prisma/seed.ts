@@ -94,10 +94,10 @@ async function main() {
       studentRoll: "ME2022045",
       studentEmail: "priya.sharma@student.edu",
       studentPhone: "9123456789",
-      category: "HOSTEL_MESS",
-      subject: "Unhygienic food quality in hostel mess Block-C",
+      category: "INFRASTRUCTURE_MAINTENANCE",
+      subject: "Broken water cooler and poor ventilation in Block-C",
       description:
-        "The food quality served in the hostel mess Block-C has been consistently poor for the past two weeks. Several students have reported stomach ailments. The vegetables are often undercooked and the drinking water dispenser has not been cleaned. Immediate action is required to prevent health hazards.",
+        "The drinking water cooler in Block-C has not been functioning for the past two weeks. Several students have reported issues with drinking water access and improper ventilation in the ground floor reading room. Immediate action is required to ensure basic amenities.",
       status: "REGISTERED",
       ackDueDate: addHours(c2Created, 48),
       slaDueDate: addDays(c2Created, 7),

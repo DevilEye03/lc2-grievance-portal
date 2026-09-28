@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const CATEGORIES = [
   { value: "ACADEMIC", label: "Academic" },
-  { value: "HOSTEL_MESS", label: "Hostel / Mess" },
   { value: "EXAMINATION", label: "Examination" },
   { value: "INFRASTRUCTURE_MAINTENANCE", label: "Infrastructure & Maintenance" },
   { value: "FEES_SCHOLARSHIP", label: "Fees & Scholarship" },
@@ -40,7 +39,6 @@ export const complaintSubmitSchema = z
       .or(z.literal("")),
     category: z.enum([
       "ACADEMIC",
-      "HOSTEL_MESS",
       "EXAMINATION",
       "INFRASTRUCTURE_MAINTENANCE",
       "FEES_SCHOLARSHIP",
