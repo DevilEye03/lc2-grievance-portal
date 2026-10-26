@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
-import { Scale, Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
 import { CampusBackground } from "@/components/layout/CampusBackground";
 
 export default function AdminLoginPage() {
@@ -50,8 +51,15 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-sm">
         {/* Brand */}
         <div className="text-center mb-6 sm:mb-8">
-          <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-brand-600 shadow-lg mb-4">
-            <Scale className="h-7 w-7 text-white" />
+          <div className="relative inline-flex items-center justify-center h-20 w-20 rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-500/40 mb-4 bg-slate-950">
+            <Image
+              src="/images/logo.jpg"
+              alt="Law Centre II Logo"
+              fill
+              sizes="80px"
+              className="object-cover"
+              priority
+            />
           </div>
           <h1 className="text-2xl font-bold text-white">Admin Portal</h1>
           <p className="text-brand-400 text-sm mt-1">LAW CENTRE II Grievance Portal</p>

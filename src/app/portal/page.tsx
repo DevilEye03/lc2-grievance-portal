@@ -3,6 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CampusBackground } from "@/components/layout/CampusBackground";
 import Link from "next/link";
+import Image from "next/image";
 import { FileText, Search, Clock, ShieldCheck, ArrowRight, Lock } from "lucide-react";
 
 export const metadata: Metadata = { title: "Home" };
@@ -16,6 +17,18 @@ export default function PortalLandingPage() {
       <main className="flex-1 flex flex-col justify-center py-8 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
         {/* Minimal Hero Header Container */}
         <div className="text-center mb-8 sm:mb-12 bg-white/90 backdrop-blur-md rounded-2xl sm:rounded-3xl p-6 sm:p-9 border border-white/90 shadow-md max-w-3xl mx-auto">
+          {/* Official Emblem */}
+          <div className="relative mx-auto mb-4 h-20 w-20 sm:h-24 sm:w-24 rounded-2xl overflow-hidden shadow-lg border-2 border-amber-500/35 bg-slate-950 hover:scale-105 transition-transform duration-300">
+            <Image
+              src="/images/logo.jpg"
+              alt="Law Centre II Student Union Grievance Portal Crest"
+              fill
+              sizes="(max-width: 640px) 80px, 96px"
+              className="object-cover"
+              priority
+            />
+          </div>
+
           <div className="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-700 rounded-full px-3.5 py-1 text-xs font-semibold mb-3 shadow-xs">
             <span>Official Student Grievance Redressal Platform</span>
           </div>

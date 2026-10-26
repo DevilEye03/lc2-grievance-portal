@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Scale, FileText, Search, Menu, X, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { FileText, Search, Menu, X, ArrowRight } from "lucide-react";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -18,8 +19,15 @@ export function Navbar() {
             onClick={() => setMobileMenuOpen(false)}
           >
             {/* Seal / Crest */}
-            <div className="flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-br from-slate-950 via-slate-900 to-brand-950 text-amber-400 shadow-sm border border-amber-500/25 group-hover:border-amber-400/50 group-hover:scale-105 transition-all flex-shrink-0">
-              <Scale className="h-5 w-5 sm:h-5.5 sm:w-5.5 text-amber-400 drop-shadow-xs" />
+            <div className="relative flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-xl overflow-hidden shadow-sm border border-amber-500/35 group-hover:border-amber-400/70 group-hover:scale-105 transition-all flex-shrink-0 bg-slate-950">
+              <Image
+                src="/images/logo.jpg"
+                alt="Law Centre II Logo"
+                fill
+                sizes="44px"
+                className="object-cover"
+                priority
+              />
             </div>
 
             {/* Typography */}
@@ -89,7 +97,15 @@ export function Navbar() {
               className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-brand-50 hover:text-brand-700 transition-colors"
             >
               <span className="flex items-center gap-3">
-                <Scale className="h-4 w-4 text-brand-600" />
+                <div className="relative h-5 w-5 rounded-md overflow-hidden flex-shrink-0 bg-slate-950 border border-amber-500/30">
+                  <Image
+                    src="/images/logo.jpg"
+                    alt="Logo"
+                    fill
+                    sizes="20px"
+                    className="object-cover"
+                  />
+                </div>
                 Home
               </span>
               <ArrowRight className="h-4 w-4 text-gray-400" />

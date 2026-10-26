@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   description:
     "Official grievance redressal portal of the Law Centre-II Student Union. Submit, track, and resolve student complaints transparently.",
   keywords: ["grievance", "complaint", "Law Centre II", "Student Union"],
+  icons: {
+    icon: "/images/logo.jpg",
+    shortcut: "/images/logo.jpg",
+    apple: "/images/logo.jpg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

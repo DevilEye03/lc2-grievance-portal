@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   FileText,
   Users,
-  Scale,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -45,8 +45,14 @@ export function AdminSidebar({ userRole, userName }: AdminSidebarProps) {
     >
       {/* Brand */}
       <div className="flex items-center gap-3 px-4 py-5 border-b border-brand-800">
-        <div className="flex-shrink-0 h-9 w-9 rounded-lg bg-brand-600 flex items-center justify-center">
-          <Scale className="h-5 w-5 text-white" />
+        <div className="relative flex-shrink-0 h-9 w-9 rounded-lg overflow-hidden border border-amber-500/35 bg-slate-950 shadow-sm">
+          <Image
+            src="/images/logo.jpg"
+            alt="Law Centre II Logo"
+            fill
+            sizes="36px"
+            className="object-cover"
+          />
         </div>
         {!collapsed && (
           <div className="min-w-0">

@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   FileText,
   Users,
-  Scale,
   Menu,
   X,
   LogOut,
@@ -55,8 +55,14 @@ export function AdminShell({ userName, userRole, children }: AdminShellProps) {
             <Menu className="h-6 w-6" />
           </button>
           <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-md bg-brand-600 flex items-center justify-center flex-shrink-0">
-              <Scale className="h-4 w-4 text-white" />
+            <div className="relative h-7 w-7 rounded-md overflow-hidden border border-amber-500/35 bg-slate-950 flex items-center justify-center flex-shrink-0">
+              <Image
+                src="/images/logo.jpg"
+                alt="Law Centre II Logo"
+                fill
+                sizes="28px"
+                className="object-cover"
+              />
             </div>
             <span className="text-sm font-bold tracking-tight">LAW CENTRE II</span>
           </div>
@@ -91,8 +97,14 @@ export function AdminShell({ userName, userRole, children }: AdminShellProps) {
             {/* Drawer Header */}
             <div className="flex items-center justify-between px-4 py-4 border-b border-brand-800">
               <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-lg bg-brand-600 flex items-center justify-center">
-                  <Scale className="h-4 w-4 text-white" />
+                <div className="relative h-8 w-8 rounded-lg overflow-hidden border border-amber-500/35 bg-slate-950 flex items-center justify-center flex-shrink-0">
+                  <Image
+                    src="/images/logo.jpg"
+                    alt="Law Centre II Logo"
+                    fill
+                    sizes="32px"
+                    className="object-cover"
+                  />
                 </div>
                 <div>
                   <p className="text-sm font-bold leading-tight">LAW CENTRE II</p>
@@ -171,8 +183,14 @@ export function AdminShell({ userName, userRole, children }: AdminShellProps) {
       >
         {/* Brand */}
         <div className="flex items-center gap-3 px-4 py-5 border-b border-brand-800">
-          <div className="flex-shrink-0 h-9 w-9 rounded-lg bg-brand-600 flex items-center justify-center">
-            <Scale className="h-5 w-5 text-white" />
+          <div className="relative flex-shrink-0 h-9 w-9 rounded-lg overflow-hidden border border-amber-500/35 bg-slate-950 flex items-center justify-center">
+            <Image
+              src="/images/logo.jpg"
+              alt="Law Centre II Logo"
+              fill
+              sizes="36px"
+              className="object-cover"
+            />
           </div>
           {!collapsed && (
             <div className="min-w-0">
